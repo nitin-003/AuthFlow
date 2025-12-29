@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { toast } from "react-toastify";
 
-function User(){
+function User() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,18 +11,16 @@ function User(){
 
   const navigate = useNavigate();
 
-  // fetch logged-in user
+  // Fetch logged-in user
   useEffect(() => {
     const fetchUser = async () => {
-      try{
-        const res = await api.get("/user"); 
+      try {
+        const res = await api.get("/user");
         setName(res.data.name);
         setEmail(res.data.email);
-      } 
-      catch(err){
+      } catch (err) {
         navigate("/login");
-      } 
-      finally{
+      } finally {
         setLoading(false);
       }
     };
@@ -30,44 +28,42 @@ function User(){
     fetchUser();
   }, [navigate]);
 
-  // update profile
+  // Update profile
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    if(!window.confirm("Are you sure you want to update your profile?")) return;
+    if (!window.confirm("Are you sure you want to update your profile?")) return;
 
-    try{
+    try {
       const updateData = { name, email };
 
-      if(password.trim()){
+      if (password.trim()) {
         updateData.password = password;
       }
 
-      await api.put("/user", updateData); 
-      toast.success("Profile updated successfully");
+      await api.put("/user", updateData);
+      toast.success("Profile updated successfully ✅");
       setPassword("");
       navigate("/home");
-    } 
-    catch(err){
-      toast.error(err.response?.data?.message || "Update failed");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Update failed ❌");
     }
   };
 
-  // delete own account
+  // Delete account
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete your account?")) return;
 
-    try{
-      await api.delete("/user"); 
-      toast.success("Account deleted successfully");
+    try {
+      await api.delete("/user");
+      toast.success("Account deleted successfully 🗑️");
       navigate("/signup");
-    } 
-    catch(err){
-      toast.error("Delete failed");
+    } catch (err) {
+      toast.error("Delete failed ❌");
     }
   };
 
-  if(loading){
+  if (loading) {
     return <p className="text-center mt-10">Loading...</p>;
   }
 
@@ -77,6 +73,15 @@ function User(){
         onSubmit={handleUpdate}
         className="bg-white p-6 rounded-lg shadow-md w-96"
       >
+        {/* Back Button */}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="text-sm text-blue-600 mb-3 hover:underline"
+        >
+          ← Back
+        </button>
+
         <h2 className="text-2xl font-bold text-center mb-4">
           My Profile
         </h2>
