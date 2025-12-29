@@ -1,0 +1,27 @@
+import './App.css';
+import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-dom";
+import Login from './pages/Login';
+import Signup from './pages/SignUp';
+import Home from './pages/Home';
+import User from './pages/User';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+function App(){
+  return (
+    <Router>
+        <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/user" element={<User />} />
+      </Routes>
+      <ToastContainer position="top-right" autoClose={2000} />
+    </Router>
+  );
+}
+
+export default App;
+
