@@ -8,7 +8,7 @@ function EditUserModal({ user, setUsers, onClose }) {
   const [loading, setLoading] = useState(false);
 
   const handleSave = async () => {
-    try {
+    try{
       setLoading(true);
 
       const res = await api.put(`/user/${user._id}`, { name, email });
@@ -20,12 +20,10 @@ function EditUserModal({ user, setUsers, onClose }) {
       toast.success("User updated successfully 🎉");
       onClose();
     } 
-    catch (err) {
-      toast.error(
-        err.response?.data?.message || "Failed to update user ❌"
-      );
+    catch(err){
+      toast.error(err.response?.data?.message || "Failed to update user ❌");
     } 
-    finally {
+    finally{
       setLoading(false);
     }
   };
@@ -35,24 +33,14 @@ function EditUserModal({ user, setUsers, onClose }) {
       <div className="bg-white p-5 rounded w-96">
         <h3 className="font-semibold mb-3">Edit User</h3>
 
-        <input
-          value={name}
-          onChange={e => setName(e.target.value)}
-          className="w-full mb-2 border p-2"
-        />
+        <input value={name} onChange={e => setName(e.target.value)} className="w-full mb-2 border p-2"/>
 
-        <input
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="w-full mb-4 border p-2"
-        />
+        <input value={email} onChange={e => setEmail(e.target.value)} className="w-full mb-4 border p-2"/>
 
         <div className="flex justify-end gap-2">
           <button onClick={onClose}>Cancel</button>
 
-          <button
-            onClick={handleSave}
-            disabled={loading}
+          <button onClick={handleSave} disabled={loading}
             className="bg-blue-600 text-white px-4 py-1 rounded disabled:opacity-60"
           >
             {loading ? "Saving..." : "Save"}

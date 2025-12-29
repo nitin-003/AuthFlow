@@ -12,18 +12,18 @@ function ChangePasswordModal({ user, onClose }) {
       return;
     }
 
-    try {
+    try{
       setLoading(true);
 
       await api.put(`/user/${user._id}`, { password });
 
       toast.success("Password changed successfully 🔐");
       onClose();
-    } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Failed to change password ❌"
-      );
-    } finally {
+    } 
+    catch(err){
+      toast.error(err.response?.data?.message || "Failed to change password ❌");
+    } 
+    finally{
       setLoading(false);
     }
   };
@@ -34,9 +34,7 @@ function ChangePasswordModal({ user, onClose }) {
         <h3 className="font-semibold mb-3">Change Password</h3>
 
         <input
-          type="password"
-          placeholder="New Password"
-          value={password}
+          type="password" placeholder="New Password" value={password}
           onChange={e => setPassword(e.target.value)}
           className="w-full mb-4 border p-2"
         />
@@ -45,8 +43,7 @@ function ChangePasswordModal({ user, onClose }) {
           <button onClick={onClose}>Cancel</button>
 
           <button
-            onClick={handleChange}
-            disabled={loading}
+            onClick={handleChange} disabled={loading}
             className="bg-green-600 text-white px-4 py-1 rounded disabled:opacity-60"
           >
             {loading ? "Updating..." : "Update"}
@@ -58,6 +55,5 @@ function ChangePasswordModal({ user, onClose }) {
 }
 
 export default ChangePasswordModal;
-
 
 

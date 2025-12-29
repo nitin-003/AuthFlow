@@ -20,7 +20,6 @@ function App(){
         <Route path="/home" element={<Home />} />
         <Route path="/user" element={<User />} />
 
-        {/* User Management Page */}
         <Route path="/users" element={<UserManagement />} />
       </Routes>
 

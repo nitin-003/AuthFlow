@@ -32,9 +32,9 @@ function User() {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    if (!window.confirm("Are you sure you want to update your profile?")) return;
+    if(!window.confirm("Are you sure you want to update your profile?")) return;
 
-    try {
+    try{
       const updateData = { name, email };
 
       if (password.trim()) {
@@ -45,25 +45,27 @@ function User() {
       toast.success("Profile updated successfully ✅");
       setPassword("");
       navigate("/home");
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(err.response?.data?.message || "Update failed ❌");
     }
   };
 
   // Delete account
   const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete your account?")) return;
+    if(!window.confirm("Are you sure you want to delete your account?")) return;
 
-    try {
+    try{
       await api.delete("/user");
       toast.success("Account deleted successfully 🗑️");
       navigate("/signup");
-    } catch (err) {
+    } 
+    catch(err){
       toast.error("Delete failed ❌");
     }
   };
 
-  if (loading) {
+  if(loading){
     return <p className="text-center mt-10">Loading...</p>;
   }
 
@@ -73,10 +75,7 @@ function User() {
         onSubmit={handleUpdate}
         className="bg-white p-6 rounded-lg shadow-md w-96"
       >
-        {/* Back Button */}
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
+        <button type="button" onClick={() => navigate(-1)}
           className="text-sm text-blue-600 mb-3 hover:underline"
         >
           ← Back
@@ -86,26 +85,18 @@ function User() {
           My Profile
         </h2>
 
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
+        <input type="text" placeholder="Name" value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full p-2 mb-3 border rounded"
         />
 
-        <input
-          type="email"
-          placeholder="Email"
+        <input type="email" placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 mb-3 border rounded"
         />
 
-        <input
-          type="password"
-          placeholder="New Password (optional)"
-          value={password}
+        <input type="password" placeholder="New Password (optional)" value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 mb-4 border rounded"
         />
@@ -130,5 +121,6 @@ function User() {
 }
 
 export default User;
+
 
 

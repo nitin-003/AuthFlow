@@ -14,10 +14,11 @@ function UserManagement() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
+      try{
         const res = await api.get("/user/all");
         setUsers(res.data);
-      } catch (err) {
+      } 
+      catch(err){
         console.error("Failed to fetch users:", err);
       }
     };
@@ -30,15 +31,14 @@ function UserManagement() {
 
       {/* Header */}
       <div className="relative p-4 bg-white border-b flex items-center">
-        {/* Back Button - Left */}
-        <button
-          onClick={() => navigate(-1)}
+        {/* Back Button */}
+        <button onClick={() => navigate(-1)}
           className="absolute left-4 text-sm text-blue-600 hover:underline"
         >
           ← Back
         </button>
 
-        {/* Title - Center */}
+        {/* Title */}
         <h2 className="mx-auto font-semibold text-lg">List of All Users</h2>
       </div>
 
@@ -53,13 +53,8 @@ function UserManagement() {
       <div className="overflow-y-auto">
         {users.map(user => (
           <div key={user._id} className="grid grid-cols-3 px-4 py-3 border-b bg-white items-center">
-            {/* Name - Left */}
             <span className="truncate text-left">{user.name}</span>
-
-            {/* Email - Center */}
             <span className="truncate text-center">{user.email}</span>
-
-            {/* Actions - Right */}
             <div className="flex justify-end">
               <UserActions user={user} setUsers={setUsers}
                 onEdit={() => {
@@ -76,7 +71,7 @@ function UserManagement() {
         ))}
       </div>
 
-      {/* Edit User Modal */}
+      {/* Edit User Model */}
       {editOpen && (
         <EditUserModal
           user={selectedUser}
@@ -85,7 +80,7 @@ function UserManagement() {
         />
       )}
 
-      {/* Change Password Modal */}
+      {/* Change Password Model */}
       {passwordOpen && (
         <ChangePasswordModal
           user={selectedUser}

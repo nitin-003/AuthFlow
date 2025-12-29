@@ -14,7 +14,7 @@ function Login(){
             await api.post("/auth/login", { email, password });
             toast.success("Login successful!");
             setTimeout(() => {
-                navigate("/home", { replace: true });
+              navigate("/home");
             }, 1500);
         } 
         catch(err){

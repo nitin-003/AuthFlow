@@ -20,10 +20,11 @@ function Home() {
   }, [navigate]);
 
   const handleLogout = async () => {
-    try {
+    try{
       await api.post("/auth/logout");
       navigate("/login");
-    } catch (err) {
+    } 
+    catch(err){
       console.error(err);
     }
   };
@@ -32,8 +33,7 @@ function Home() {
     <div className="min-h-screen bg-gray-100 relative">
 
       <div className="absolute top-4 right-4 flex items-center gap-4">
-        <span
-          onClick={() => navigate("/user")}
+        <span onClick={() => navigate("/user")}
           className="cursor-pointer font-semibold text-gray-800 hover:text-blue-600"
         >
           {userName}
@@ -47,9 +47,7 @@ function Home() {
         </button>
       </div>
 
-      {/* NEW PAGE NAVIGATION */}
-      <div
-        onClick={() => navigate("/users")}
+      <div onClick={() => navigate("/users")}
         className="absolute top-4 left-4 cursor-pointer font-semibold text-gray-800 hover:text-blue-600"
       >
         User Management

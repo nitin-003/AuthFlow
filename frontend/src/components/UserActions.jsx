@@ -6,7 +6,7 @@ function UserActions({ user, setUsers, onEdit, onPassword }) {
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
-    if (!window.confirm("Delete this user ?")) return;
+    if(!window.confirm("Delete this user ?")) return;
 
     try {
       await api.delete(`/user/${user._id}`);
@@ -15,7 +15,8 @@ function UserActions({ user, setUsers, onEdit, onPassword }) {
 
       toast.success("User deleted successfully 🗑️");
       setOpen(false);
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(
         err.response?.data?.message || "Delete failed ❌"
       );
@@ -61,5 +62,6 @@ function UserActions({ user, setUsers, onEdit, onPassword }) {
 }
 
 export default UserActions;
+
 
 
