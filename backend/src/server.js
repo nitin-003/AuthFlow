@@ -7,6 +7,7 @@ dotenv.config();
 const authRoute = require('./routes/authRoute');
 const userRoute = require('./routes/userRoute');
 const cookieParser = require("cookie-parser");
+const productRoute = require("./routes/productRoute");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,6 +23,7 @@ connectDB();
 
 app.use('/auth', authRoute);
 app.use("/user", userRoute);
+app.use("/products", productRoute);
 
 app.get('/', (req, res) => {
   res.send("Hello World");

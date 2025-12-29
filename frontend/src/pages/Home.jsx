@@ -8,10 +8,11 @@ function Home() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
+      try{
         const res = await api.get("/user");
         setUserName(res.data.name);
-      } catch (err) {
+      } 
+      catch(err){
         navigate("/login");
       }
     };
@@ -30,33 +31,63 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex">
 
-      <div className="absolute top-4 right-4 flex items-center gap-4">
-        <span onClick={() => navigate("/user")}
-          className="cursor-pointer font-semibold text-gray-800 hover:text-blue-600"
-        >
-          {userName}
-        </span>
+      {/* LEFT SIDEBAR */}
+      <div className="w-64 bg-white shadow-xl p-6">
+        <h3 className="text-xl font-bold text-blue-600 mb-6">
+          Dashboard
+        </h3>
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Logout
-        </button>
+        <div className="space-y-3">
+          <button
+            onClick={() => navigate("/users")}
+            className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium transition"
+          >
+            👤 User Management
+          </button>
+
+          <button
+            onClick={() => navigate("/products")}
+            className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium transition"
+          >
+            📦 Product Management
+          </button>
+        </div>
       </div>
 
-      <div onClick={() => navigate("/users")}
-        className="absolute top-4 left-4 cursor-pointer font-semibold text-gray-800 hover:text-blue-600"
-      >
-        User Management
-      </div>
+      {/* MAIN CONTENT */}
+      <div className="flex-1 relative">
 
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-3xl font-bold text-blue-600">
-          Welcome, {userName}
-        </h2>
+        {/* TOP BAR */}
+        <div className="absolute top-4 right-6 flex items-center gap-4">
+          <span
+            onClick={() => navigate("/user")}
+            className="cursor-pointer font-semibold text-gray-700 hover:text-blue-600"
+          >
+            {userName}
+          </span>
+
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+          >
+            Logout
+          </button>
+        </div>
+
+        {/* CENTER CONTENT */}
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="bg-white p-10 rounded-xl shadow-lg text-center">
+            <h2 className="text-3xl font-bold text-blue-600 mb-2">
+              Welcome, {userName}
+            </h2>
+            <p className="text-gray-600">
+              Manage users and products from the dashboard
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   );

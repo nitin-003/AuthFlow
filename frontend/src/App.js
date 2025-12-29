@@ -7,6 +7,7 @@ import User from './pages/User';
 import UserManagement from "./components/UserManagementPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Products from './pages/Products';
 
 function App(){
   return (
@@ -21,6 +22,7 @@ function App(){
         <Route path="/user" element={<User />} />
 
         <Route path="/users" element={<UserManagement />} />
+        <Route path="/products" element={<Products />} />
       </Routes>
 
       <ToastContainer position="top-right" autoClose={2000} />
