@@ -8,6 +8,7 @@ import UserManagement from "./components/UserManagementPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Products from './pages/Products';
+import InventoryLogs from './pages/InventoryLogs';
 
 function App(){
   return (
@@ -23,6 +24,7 @@ function App(){
 
         <Route path="/users" element={<UserManagement />} />
         <Route path="/products" element={<Products />} /> 
+        <Route path="/inventory-logs" element={<InventoryLogs />} />
       </Routes>
 
       <ToastContainer position="top-right" autoClose={2000} />
