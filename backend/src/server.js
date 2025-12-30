@@ -6,8 +6,8 @@ const connectDB = require('./config/db');
 dotenv.config();
 const authRoute = require('./routes/authRoute');
 const userRoute = require('./routes/userRoute');
+const productRoute = require('./routes/productRoute');
 const cookieParser = require("cookie-parser");
-const productRoute = require("./routes/productRoute");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,6 +34,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
 

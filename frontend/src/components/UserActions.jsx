@@ -2,13 +2,13 @@ import { useState } from "react";
 import api from "../api/axios";
 import { toast } from "react-toastify";
 
-function UserActions({ user, setUsers, onEdit, onPassword }) {
+function UserActions({ user, setUsers, onEdit, onPassword }){
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
     if(!window.confirm("Delete this user ?")) return;
 
-    try {
+    try{
       await api.delete(`/user/${user._id}`);
 
       setUsers(prev => prev.filter(u => u._id !== user._id));

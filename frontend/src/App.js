@@ -22,7 +22,7 @@ function App(){
         <Route path="/user" element={<User />} />
 
         <Route path="/users" element={<UserManagement />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" element={<Products />} /> 
       </Routes>
 
       <ToastContainer position="top-right" autoClose={2000} />

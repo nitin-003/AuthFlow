@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-export default function ProductForm({
-  fetchProducts,
-  selectedProduct,
-  setSelectedProduct
-}) {
+export default function ProductForm({ fetchProducts, selectedProduct, setSelectedProduct }){
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     quantity: "",
-    category: ""
+    category: "",
   });
 
   useEffect(() => {
-    if (selectedProduct) {
-      setFormData(selectedProduct);
+    if(selectedProduct){
+      setFormData({
+        name: selectedProduct.name,
+        price: selectedProduct.price,
+        quantity: selectedProduct.quantity,
+        category: selectedProduct.category,
+      });
     }
   }, [selectedProduct]);
 
@@ -27,71 +31,84 @@ export default function ProductForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      if (selectedProduct) {
+    try{
+      if(selectedProduct){
         await api.put(`/products/${selectedProduct._id}`, formData);
         toast.success("Product updated");
-      } else {
+      } 
+      else{
         await api.post("/products", formData);
         toast.success("Product created");
       }
 
       setFormData({ name: "", price: "", quantity: "", category: "" });
+
       setSelectedProduct(null);
       fetchProducts();
-    } catch {
-      toast.error("Operation failed");
+    } 
+    catch(err){
+      if(err.response?.status === 401){
+        toast.error("Session expired. Login again.");
+        navigate("/login");
+      } 
+      else{
+        toast.error("Operation failed");
+      }
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-4 rounded shadow"
+      className="bg-white p-6 rounded-xl shadow mb-8 grid grid-cols-4 gap-4"
     >
       <input
         name="name"
+        placeholder="Name"
         value={formData.name}
         onChange={handleChange}
-        placeholder="Name"
         className="border p-2 rounded"
         required
       />
+
       <input
         name="price"
         type="number"
+        placeholder="Price"
         value={formData.price}
         onChange={handleChange}
-        placeholder="Price"
         className="border p-2 rounded"
         required
       />
+
       <input
         name="quantity"
         type="number"
+        placeholder="Quantity"
         value={formData.quantity}
         onChange={handleChange}
-        placeholder="Quantity"
         className="border p-2 rounded"
         required
       />
+
       <input
         name="category"
+        placeholder="Category"
         value={formData.category}
         onChange={handleChange}
-        placeholder="Category"
         className="border p-2 rounded"
         required
       />
 
       <button
         type="submit"
-        className="col-span-1 md:col-span-4 bg-green-600 text-white py-2 rounded"
+        className="col-span-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
       >
         {selectedProduct ? "Update Product" : "Add Product"}
       </button>
     </form>
   );
 }
+
 
 
