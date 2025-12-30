@@ -17,7 +17,7 @@ const {
 router.use(protect);
 
 // INVENTORY ROUTES
-router.get("/inventory/logs", getInventoryLogs);
+router.get("/inventory-logs", getInventoryLogs);
 router.patch("/inventory/v2/:id", updateInventoryV2);
 router.patch("/:id/inventory", updateInventory);
 

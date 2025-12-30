@@ -5,7 +5,7 @@ import EditUserModal from "./EditUserModel";
 import ChangePasswordModal from "./ChangePasswordModel";
 import { useNavigate } from "react-router-dom";
 
-function UserManagement() {
+function UserManagement(){
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
@@ -14,10 +14,11 @@ function UserManagement() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
+      try{
         const res = await api.get("/user/all");
         setUsers(res.data);
-      } catch (err) {
+      } 
+      catch(err){
         console.error("Failed to fetch users:", err);
       }
     };

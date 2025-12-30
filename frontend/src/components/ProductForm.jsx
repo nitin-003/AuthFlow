@@ -14,7 +14,7 @@ export default function ProductForm({ fetchProducts, selectedProduct, setSelecte
     });
 
     useEffect(() => {
-        if (selectedProduct) {
+        if(selectedProduct){
             setFormData({
                 name: selectedProduct.name,
                 price: selectedProduct.price,
@@ -31,12 +31,12 @@ export default function ProductForm({ fetchProducts, selectedProduct, setSelecte
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            if (selectedProduct) {
+        try{
+            if(selectedProduct){
                 await api.put(`/products/${selectedProduct._id}`, formData);
                 toast.success("Product updated");
             }
-            else {
+            else{
                 await api.post("/products", formData);
                 toast.success("Product created");
             }
@@ -131,7 +131,7 @@ export default function ProductForm({ fetchProducts, selectedProduct, setSelecte
                         </button>
                     </>
                 ) : (
-                    /* ADD — FULL WIDTH */
+                    /* ADD */
                     <button type="submit"
                         className="w-full h-10 rounded text-white font-medium bg-blue-600 hover:bg-blue-700 transition"
                     >
@@ -142,5 +142,6 @@ export default function ProductForm({ fetchProducts, selectedProduct, setSelecte
         </form>
     );
 }
+
 
 

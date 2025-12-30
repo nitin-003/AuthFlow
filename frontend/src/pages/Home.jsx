@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useEffect, useState } from "react";
 
-function Home() {
+function Home(){
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
 
@@ -42,14 +42,14 @@ function Home() {
         <div className="space-y-3">
           <button
             onClick={() => navigate("/users")}
-            className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium transition"
+            className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-200 text-gray-700 font-medium transition"
           >
             👤 User Management
           </button>
 
           <button
             onClick={() => navigate("/products")}
-            className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium transition"
+            className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-200 text-gray-700 font-medium transition"
           >
             📦 Product Management
           </button>
@@ -70,7 +70,7 @@ function Home() {
 
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+            className="bg-red-400 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
           >
             Logout
           </button>
@@ -94,5 +94,4 @@ function Home() {
 }
 
 export default Home;
-
 
