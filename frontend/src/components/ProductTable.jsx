@@ -14,26 +14,28 @@ export default function ProductTable({ products, fetchProducts, loading }) {
 
   /* DELETE PRODUCT */
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this product permanently?")) return;
+    if(!window.confirm("Delete this product permanently?")) return;
 
-    try {
+    try{
       await api.delete(`/products/${id}`);
       toast.success("Product deleted successfully");
       fetchProducts();
-    } catch {
+    } 
+    catch{
       toast.error("Delete failed");
     }
   };
 
   /* QUICK STOCK UPDATE (+ / -) */
   const updateStock = async (id, qty) => {
-    try {
+    try{
       await api.patch(`/products/inventory/v2/${id}`, {
         quantity: qty,
         reason: qty > 0 ? "Quick add" : "Quick remove",
       });
       fetchProducts();
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(err.response?.data?.message || "Update failed");
     }
   };
@@ -41,7 +43,7 @@ export default function ProductTable({ products, fetchProducts, loading }) {
   const getStatus = (p) => p.stockStatus || p.status;
 
   const statusColor = (status) => {
-    switch (status) {
+    switch(status){
       case "IN_STOCK":
         return "bg-green-100 text-green-700";
       case "LOW_STOCK":
@@ -53,7 +55,7 @@ export default function ProductTable({ products, fetchProducts, loading }) {
     }
   };
 
-  if (loading) {
+  if(loading){
     return (
       <p className="text-center py-10 text-gray-500">
         Loading products...
@@ -124,7 +126,7 @@ export default function ProductTable({ products, fetchProducts, loading }) {
 
                 {/* Unit */}
                 <td className="p-4 text-center text-gray-600">
-                  {p.unit || "-"}
+                  per {p.unit || "-"}
                 </td>
 
                 {/* Status */}

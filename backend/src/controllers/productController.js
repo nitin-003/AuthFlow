@@ -4,16 +4,8 @@ const updateStockStatus = require("../utils/updateStockStatus");
 
 /* CREATE PRODUCT */
 exports.createProduct = async (req, res) => {
-  try {
-    const {
-      name,
-      sku,
-      price,
-      quantity,
-      unit,
-      category,
-      minStockLevel,
-    } = req.body;
+  try{
+    const { name, sku, price, quantity, unit, category, minStockLevel } = req.body;
 
     if(!name || !sku || price == null || quantity == null || !category){
       return res.status(400).json({ message: "Missing required fields" });
@@ -24,30 +16,16 @@ exports.createProduct = async (req, res) => {
       return res.status(400).json({ message: "SKU already exists" });
     }
 
-    const product = await Product.create({
-      name,
-      sku: sku.toUpperCase(),
-      price,
-      quantity,
-      unit,
-      category,
-      minStockLevel,
-      createdBy: req.user.id,
-    });
+    const product = await Product.create({ name, sku: sku.toUpperCase(),
+      price, quantity, unit, category, minStockLevel, createdBy: req.user.id });
 
     updateStockStatus(product);
     await product.save();
 
     if(quantity > 0){
-      await InventoryLog.create({
-        product: product._id,
-        productName: product.name,
-        sku: product.sku,
-        unit: product.unit,
-        type: "IN",
-        quantity,
-        reason: "Initial stock",
-        performedBy: req.user.id,
+      await InventoryLog.create({ product: product._id, productName: product.name,
+        sku: product.sku, unit: product.unit, type: "IN", quantity,
+        reason: "Initial stock", performedBy: req.user.id,
       });
     }
 
@@ -106,10 +84,8 @@ exports.updateProduct = async (req, res) => {
     delete req.body.status;
 
     const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+      req.params.id, req.body,
+      { new: true, runValidators: true });
 
     if(!product){
       return res.status(404).json({ message: "Product not found" });
@@ -134,14 +110,9 @@ exports.deleteProduct = async (req, res) => {
     }
 
     if(product.quantity > 0){
-      await InventoryLog.create({
-        product: product._id,
-        productName: product.name,
-        sku: product.sku,
-        unit: product.unit,
-        type: "OUT",
-        quantity: product.quantity,
-        reason: "Product deleted",
+      await InventoryLog.create({ product: product._id,
+        productName: product.name, sku: product.sku, unit: product.unit,
+        type: "OUT", quantity: product.quantity, reason: "Product deleted", 
         performedBy: req.user.id,
       });
     }
@@ -181,14 +152,9 @@ exports.updateInventory = async (req, res) => {
     updateStockStatus(product);
     await product.save();
 
-    await InventoryLog.create({
-      product: product._id,
-      productName: product.name,
-      sku: product.sku,
-      unit: product.unit,
-      type: quantity > 0 ? "IN" : "OUT",
-      quantity: Math.abs(quantity),
-      reason,
+    await InventoryLog.create({ product: product._id,
+      productName: product.name, sku: product.sku, unit: product.unit,
+      type: quantity > 0 ? "IN" : "OUT", quantity: Math.abs(quantity), reason,
       performedBy: req.user.id,
     });
 
