@@ -8,17 +8,33 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
 
+    sku: {
+      type: String,
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
+      index: true, 
+    },
+
     price: {
       type: Number,
       required: true,
       min: 0,
     },
 
+    // Quantity is always interpreted using `unit`
     quantity: {
       type: Number,
       required: true,
       default: 0,
       min: 0,
+    },
+
+    unit: {
+      type: String,
+      enum: ["pcs", "kg", "litre", "box"],
+      default: "pcs",
     },
 
     category: {
@@ -27,6 +43,7 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
 
+    // Minimum allowed quantity (same unit as quantity)
     minStockLevel: {
       type: Number,
       default: 5,
@@ -42,10 +59,16 @@ const productSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+      index: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+  }
 );
 
 module.exports = mongoose.model("Product", productSchema);
+
 

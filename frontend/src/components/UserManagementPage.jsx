@@ -91,9 +91,7 @@ function UserManagement(){
 
                 {/* Actions */}
                 <div className="flex justify-end">
-                  <UserActions
-                    user={user}
-                    setUsers={setUsers}
+                  <UserActions user={user} setUsers={setUsers}
                     onEdit={() => {
                       setSelectedUser(user);
                       setEditOpen(true);
@@ -112,9 +110,7 @@ function UserManagement(){
 
       {/* Edit User Modal */}
       {editOpen && (
-        <EditUserModal
-          user={selectedUser}
-          setUsers={setUsers}
+        <EditUserModal user={selectedUser} setUsers={setUsers}
           onClose={() => setEditOpen(false)}
         />
       )}
@@ -131,4 +127,5 @@ function UserManagement(){
 }
 
 export default UserManagement;
+
 

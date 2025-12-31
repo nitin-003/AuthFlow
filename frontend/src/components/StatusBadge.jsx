@@ -1,21 +1,14 @@
 export default function StatusBadge({ status }) {
-  const colors = {
-    IN_STOCK: "green",
-    LOW_STOCK: "orange",
-    OUT_OF_STOCK: "red",
+  const styles = {
+    IN_STOCK: "bg-green-100 text-green-700",
+    LOW_STOCK: "bg-yellow-100 text-yellow-700",
+    OUT_OF_STOCK: "bg-red-100 text-red-700",
   };
 
   return (
-    <span style={{
-      padding: "4px 8px",
-      borderRadius: "6px",
-      color: "white",
-      background: colors[status],
-      fontSize: "12px"
-    }}>
-      {status}
+    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${styles[status]}`}>
+      {status.replace("_", " ")}
     </span>
   );
 }
-
 

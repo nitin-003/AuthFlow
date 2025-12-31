@@ -1,147 +1,203 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
-export default function ProductForm({ fetchProducts, selectedProduct, setSelectedProduct }) {
-    const navigate = useNavigate();
-
+export default function ProductForm({
+    fetchProducts,
+    selectedProduct,
+    setSelectedProduct,
+    onClose,
+}) {
     const [formData, setFormData] = useState({
         name: "",
+        sku: "",
+        unit: "",
         price: "",
         quantity: "",
         category: "",
     });
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
-        if(selectedProduct){
+        if (selectedProduct) {
             setFormData({
-                name: selectedProduct.name,
-                price: selectedProduct.price,
-                quantity: selectedProduct.quantity,
-                category: selectedProduct.category,
+                name: selectedProduct.name ?? "",
+                sku: selectedProduct.sku ?? "",
+                unit: selectedProduct.unit ?? "",
+                price: selectedProduct.price ?? "",
+                category: selectedProduct.category ?? "",
+                quantity: "",
             });
         }
     }, [selectedProduct]);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((p) => ({ ...p, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        try{
-            if(selectedProduct){
-                await api.put(`/products/${selectedProduct._id}`, formData);
-                toast.success("Product updated");
-            }
-            else{
-                await api.post("/products", formData);
-                toast.success("Product created");
-            }
+        try {
+            const payload = {
+                name: formData.name,
+                sku: formData.sku,
+                unit: formData.unit,
+                price: Number(formData.price),
+                category: formData.category,
+            };
 
-            setFormData({ name: "", price: "", quantity: "", category: "" });
-            setSelectedProduct(null);
+            if (!selectedProduct) payload.quantity = Number(formData.quantity);
+
+            selectedProduct
+                ? await api.patch(`/products/${selectedProduct._id}`, payload)
+                : await api.post("/products", payload);
+
+            toast.success(
+                selectedProduct ? "Product updated successfully" : "Product created successfully"
+            );
+
             fetchProducts();
-        } 
-        catch(err){
-            if(err.response?.status === 401){
-                toast.error("Session expired. Login again.");
-                navigate("/login");
-            } 
-            else{
-                toast.error("Operation failed");
-            }
+            setSelectedProduct(null);
+            onClose();
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Operation failed");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-white p-4 rounded-xl shadow mb-6 grid grid-cols-12 gap-4 items-center"
+            className="w-full max-w-lg mx-auto bg-white rounded-2xl shadow-lg
+                 max-h-[85vh] overflow-y-auto px-6 py-5 space-y-5"
         >
-            {/* NAME */}
-            <input
-                name="name"
-                placeholder="Product name"
-                value={formData.name}
-                onChange={handleChange}
-                className="col-span-3 border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-            />
+            {/* TITLE */}
+            <div className="text-center">
+                <h3 className="text-lg font-bold text-gray-800">
+                    {selectedProduct ? "Update Product" : "Add Product"}
+                </h3>
+                <p className="text-xs font-bold text-gray-500 mt-1">
+                    {selectedProduct
+                        ? "Edit product details below"
+                        : "Fill details to add a new product"}
+                </p>
+            </div>
 
-            {/* PRICE */}
-            <input
-                name="price"
-                type="number"
-                placeholder="Price"
-                value={formData.price}
-                onChange={handleChange}
-                className="col-span-2 border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-            />
+            {/* FORM BODY */}
+            <div className="bg-gray-50 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* NAME */}
+                <div className="sm:col-span-2">
+                    <label className="label font-bold">Product Name</label>
+                    <input
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="e.g. Apple iPhone 15"
+                        required
+                        className="input"
+                    />
+                </div>
 
-            {/* QTY */}
-            <input
-                name="quantity"
-                type="number"
-                placeholder="Qty"
-                value={formData.quantity}
-                onChange={handleChange}
-                className="col-span-2 border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-            />
+                {/* SKU */}
+                <div>
+                    <label className="label font-bold">SKU</label>
+                    <input
+                        name="sku"
+                        value={formData.sku}
+                        onChange={handleChange}
+                        disabled={Boolean(selectedProduct)}   // 🔒 disabled only on edit
+                        placeholder={selectedProduct ? "" : "Unique product code"}
+                        className={`input ${selectedProduct
+                                ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                                : ""
+                            }`}
+                    />
+                    {selectedProduct && (
+                        <p className="hint">SKU cannot be changed once created</p>
+                    )}
+                </div>
 
-            {/* CATEGORY */}
-            <input
-                name="category"
-                placeholder="Category"
-                value={formData.category}
-                onChange={handleChange}
-                className="col-span-3 border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-            />
 
-            {/* ACTION BUTTONS */}
-            <div className="col-span-2 flex gap-2">
-                {selectedProduct ? (
-                    <>
-                        {/* UPDATE */}
-                        <button type="submit"
-                            className="flex-1 h-10 rounded text-white font-medium bg-yellow-500 hover:bg-yellow-600 transition"
-                        >
-                            Update
-                        </button>
+                {/* UNIT */}
+                <div>
+                    <label className="label font-bold">Unit</label>
+                    <input
+                        name="unit"
+                        value={formData.unit}
+                        onChange={handleChange}
+                        placeholder="pcs / kg / box / litre"
+                        className="input"
+                    />
+                </div>
 
-                        {/* CANCEL */}
-                        <button type="button"
-                            onClick={() => {
-                                setSelectedProduct(null);
-                                setFormData({
-                                    name: "",
-                                    price: "",
-                                    quantity: "",
-                                    category: "",
-                                });
-                            }}
-                            className="flex-1 h-10 rounded bg-gray-300 hover:bg-gray-400 transition"
-                        >
-                            Cancel
-                        </button>
-                    </>
-                ) : (
-                    /* ADD */
-                    <button type="submit"
-                        className="w-full h-10 rounded text-white font-medium bg-blue-600 hover:bg-blue-700 transition"
-                    >
-                        Add Product
-                    </button>
+                {/* PRICE */}
+                <div>
+                    <label className="label font-bold">Price</label>
+                    <input
+                        type="number"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleChange}
+                        placeholder="0.00"
+                        required
+                        className="input"
+                    />
+                </div>
+
+                {/* QUANTITY */}
+                {!selectedProduct && (
+                    <div>
+                        <label className="label font-bold">Quantity</label>
+                        <input
+                            type="number"
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={handleChange}
+                            placeholder="Initial stock"
+                            required
+                            className="input"
+                        />
+                    </div>
                 )}
+
+                {/* CATEGORY */}
+                <div className="sm:col-span-2">
+                    <label className="label font-bold">Category</label>
+                    <input
+                        name="category"
+                        value={formData.category}
+                        onChange={handleChange}
+                        placeholder="Electronics / Furniture"
+                        required
+                        className="input font-bold"
+                    />
+                </div>
+            </div>
+
+            {/* FOOTER */}
+            <div className="sticky bottom-0 bg-white pt-4 border-t flex justify-end gap-3">
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="btn-secondary"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn-primary"
+                >
+                    {loading ? "Saving..." : selectedProduct ? "Update Product" : "Add Product"}
+                </button>
             </div>
         </form>
     );
 }
-
-
 

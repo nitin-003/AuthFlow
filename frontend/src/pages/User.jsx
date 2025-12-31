@@ -37,7 +37,7 @@ function User() {
     try{
       const updateData = { name, email };
 
-      if (password.trim()) {
+      if(password.trim()){
         updateData.password = password;
       }
 
@@ -121,5 +121,6 @@ function User() {
 }
 
 export default User;
+
 
 

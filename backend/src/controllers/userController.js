@@ -119,7 +119,7 @@ module.exports.updateUserById = async (req, res) => {
 };
 
 module.exports.deleteUserById = async (req, res) => {
-  try {
+  try{
     // prevent deleting self via management route
     if(req.user.id === req.params.id){
       return res.status(400).json({ message: "You cannot delete your own account" });
