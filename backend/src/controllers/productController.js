@@ -5,27 +5,31 @@ const updateStockStatus = require("../utils/updateStockStatus");
 /* CREATE PRODUCT */
 exports.createProduct = async (req, res) => {
   try{
-    const { name, sku, price, quantity, unit, category, minStockLevel } = req.body;
+    const { name, sku, price, quantity = 0, unit, category, minStockLevel } = req.body;
 
-    if(!name || !sku || price == null || quantity == null || !category){
+    // Required fields validation (match schema)
+    if(!name || !sku || price == null || !category || minStockLevel == null){
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    // SKU uniqueness
     const existing = await Product.findOne({ sku: sku.toUpperCase() });
     if(existing){
       return res.status(400).json({ message: "SKU already exists" });
     }
 
-    const product = await Product.create({ name, sku: sku.toUpperCase(),
-      price, quantity, unit, category, minStockLevel, createdBy: req.user.id });
+    const product = new Product({ name, sku: sku.toUpperCase(), price, quantity,
+      unit, category, minStockLevel, createdBy: req.user.id });
 
+    // Set status based on quantity & minStockLevel
     updateStockStatus(product);
     await product.save();
 
+    // Initial inventory log
     if(quantity > 0){
-      await InventoryLog.create({ product: product._id, productName: product.name,
-        sku: product.sku, unit: product.unit, type: "IN", quantity,
-        reason: "Initial stock", performedBy: req.user.id,
+      await InventoryLog.create({ product: product._id,
+        productName: product.name, sku: product.sku, unit: product.unit,
+        type: "IN", quantity, reason: "Initial stock", performedBy: req.user.id,
       });
     }
 
@@ -51,9 +55,11 @@ exports.getProducts = async (req, res) => {
 exports.getProductById = async (req, res) => {
   try{
     const product = await Product.findById(req.params.id);
+
     if(!product){
       return res.status(404).json({ message: "Product not found" });
     }
+
     res.json(product);
   } 
   catch(err){
@@ -65,6 +71,10 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try{
     const { sku } = req.body;
+
+    // Explicitly block inventory fields
+    const forbiddenFields = ["quantity", "status"];
+    forbiddenFields.forEach(field => delete req.body[field]);
 
     if(sku){
       const skuExists = await Product.findOne({
@@ -79,13 +89,11 @@ exports.updateProduct = async (req, res) => {
       req.body.sku = sku.toUpperCase();
     }
 
-    // Block stock manipulation here
-    delete req.body.quantity;
-    delete req.body.status;
-
     const product = await Product.findByIdAndUpdate(
-      req.params.id, req.body,
-      { new: true, runValidators: true });
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
 
     if(!product){
       return res.status(404).json({ message: "Product not found" });
@@ -105,14 +113,21 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try{
     const product = await Product.findById(req.params.id);
+
     if(!product){
       return res.status(404).json({ message: "Product not found" });
     }
 
+    // Log remaining stock as OUT
     if(product.quantity > 0){
-      await InventoryLog.create({ product: product._id,
-        productName: product.name, sku: product.sku, unit: product.unit,
-        type: "OUT", quantity: product.quantity, reason: "Product deleted", 
+      await InventoryLog.create({
+        product: product._id,
+        productName: product.name,
+        sku: product.sku,
+        unit: product.unit,
+        type: "OUT",
+        quantity: product.quantity,
+        reason: "Product deleted",
         performedBy: req.user.id,
       });
     }
@@ -131,7 +146,7 @@ exports.updateInventory = async (req, res) => {
     const { quantity, reason } = req.body;
 
     if(typeof quantity !== "number" || quantity === 0){
-      return res.status(400).json({ message: "Quantity must be non-zero" });
+      return res.status(400).json({ message: "Quantity must be non-zero number" });
     }
 
     if(!reason){
@@ -152,9 +167,14 @@ exports.updateInventory = async (req, res) => {
     updateStockStatus(product);
     await product.save();
 
-    await InventoryLog.create({ product: product._id,
-      productName: product.name, sku: product.sku, unit: product.unit,
-      type: quantity > 0 ? "IN" : "OUT", quantity: Math.abs(quantity), reason,
+    await InventoryLog.create({
+      product: product._id,
+      productName: product.name,
+      sku: product.sku,
+      unit: product.unit,
+      type: quantity > 0 ? "IN" : "OUT",
+      quantity: Math.abs(quantity),
+      reason,
       performedBy: req.user.id,
     });
 
@@ -179,5 +199,4 @@ exports.getInventoryLogs = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 

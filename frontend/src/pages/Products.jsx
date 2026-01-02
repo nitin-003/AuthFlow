@@ -7,7 +7,7 @@ import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus } from "lucide-react";
 
-export default function Products() {
+export default function Products(){
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,14 +16,10 @@ export default function Products() {
   const navigate = useNavigate();
 
   const fetchProducts = useCallback(async () => {
-    let isMounted = true;
     try{
       setLoading(true);
       const res = await api.get("/products");
-
-      if(isMounted){
-        setProducts(Array.isArray(res.data) ? res.data : []);
-      }
+      setProducts(Array.isArray(res.data) ? res.data : []);
     } 
     catch(err){
       if(err.response?.status === 401){
@@ -35,12 +31,8 @@ export default function Products() {
       }
     } 
     finally{
-      if(isMounted) setLoading(false);
+      setLoading(false);
     }
-
-    return () => {
-      isMounted = false;
-    };
   }, [navigate]);
 
   useEffect(() => {
@@ -84,7 +76,8 @@ export default function Products() {
       </div>
 
       {/* TABLE */}
-      <ProductTable products={products} loading={loading} fetchProducts={fetchProducts}
+      <ProductTable products={products} loading={loading}
+        fetchProducts={fetchProducts}
         onEdit={(product) => {
           setSelectedProduct(product);
           setShowModal(true);
@@ -93,8 +86,10 @@ export default function Products() {
 
       {/* MODAL */}
       <Modal isOpen={showModal} onClose={closeModal}>
-        <ProductForm fetchProducts={fetchProducts} selectedProduct={selectedProduct}
-          setSelectedProduct={setSelectedProduct} onClose={closeModal}
+        <ProductForm
+          fetchProducts={fetchProducts}
+          selectedProduct={selectedProduct}
+          onClose={closeModal}
         />
       </Modal>
     </div>

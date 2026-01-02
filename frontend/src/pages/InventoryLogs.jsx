@@ -46,7 +46,7 @@ export default function InventoryLogs() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* HEADER */}
-      <div className="mb-8">
+      <div className="mb-0">
         <div className="flex items-center justify-between">
           <button onClick={() => navigate(-1)}
             className="flex items-center gap-1 bg-gray-100 text-gray-700

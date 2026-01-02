@@ -8,7 +8,7 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!quantity || Number(quantity) === 0) {
+    if(!quantity || Number(quantity) === 0){
       toast.error("Quantity cannot be zero");
       return;
     }
@@ -17,21 +17,23 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
       setLoading(true);
 
       await api.patch(`/products/inventory/v2/${product._id}`, {
-        quantity: Number(quantity), // +ve or -ve
+        quantity: Number(quantity), 
         reason: reason.trim(),
       });
 
       toast.success("Inventory updated successfully");
       onSuccess();
       onClose();
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(err.response?.data?.message || "Inventory update failed");
-    } finally {
+    } 
+    finally{
       setLoading(false);
     }
   };
 
-  if (!product) return null;
+  if(!product) return null;
 
   return (
     <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
@@ -100,4 +102,5 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
     </div>
   );
 }
+
 

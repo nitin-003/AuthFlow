@@ -43,10 +43,9 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Minimum allowed quantity (same unit as quantity)
     minStockLevel: {
       type: Number,
-      default: 5,
+      required: true,
       min: 0,
     },
 
@@ -70,5 +69,6 @@ const productSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Product", productSchema);
+
 
 

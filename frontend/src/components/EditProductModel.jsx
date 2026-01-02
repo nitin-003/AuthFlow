@@ -1,127 +1,119 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../api/axios";
 import { toast } from "react-toastify";
 
-export default function EditProductModal({ product, onClose, refresh }) {
+export default function EditProductModal({ product, onClose, refresh }){
   const [form, setForm] = useState({
-    name: "",
-    sku: "",
-    unit: "",
-    price: "",
-    category: "",
-  });
+    name: "", sku: "", price: "", unit: "pcs", category: "" });
 
-  /* PREFILL FORM WHEN PRODUCT CHANGES */
+  /* Prefill when modal opens */
   useEffect(() => {
-    if (product) {
+    if(product){
       setForm({
-        name: product.name || "",
-        sku: product.sku || "",
-        unit: product.unit || "",
-        price: product.price || "",
-        category: product.category || "",
+        name: product.name ?? "",
+        sku: product.sku ?? "",
+        price: product.price ?? "",
+        unit: product.unit ?? "pcs",
+        category: product.category ?? "",
       });
     }
   }, [product]);
 
+  if(!product) return null;
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
-    try {
+    if(!form.name || !form.sku || !form.category){
+      return toast.error("Name, SKU and Category are required");
+    }
+
+    try{
       await api.put(`/products/${product._id}`, {
-        ...form,
+        name: form.name.trim(),
+        sku: form.sku.trim(),
         price: Number(form.price),
+        unit: form.unit,
+        category: form.category.trim(),
       });
 
       toast.success("Product updated successfully");
       refresh();
       onClose();
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(err.response?.data?.message || "Update failed");
     }
   };
 
-  if (!product) return null;
-
   return (
-    <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
-      <h3 className="text-xl font-semibold text-gray-800 mb-5">
-        Edit Product
-      </h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6">
 
-      <div className="space-y-4">
-        {/* NAME */}
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="Product Name"
-          className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500"
-        />
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Edit Product
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-lg"
+          >
+            ✕
+          </button>
+        </div>
 
-        {/* SKU */}
-        <input
-          name="sku"
-          value={form.sku}
-          onChange={handleChange}
-          placeholder="SKU"
-          className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500"
-        />
+        {/* Form */}
+        <div className="grid grid-cols-2 gap-4">
+          <input name="name" value={form.name} onChange={handleChange}
+            placeholder="Product Name" className="col-span-2 input"
+          />
 
-        {/* UNIT */}
-        <select
-          name="unit"
-          value={form.unit}
-          onChange={handleChange}
-          className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="">Select unit</option>
-          <option value="pcs">pieces</option>
-          <option value="kg">kg</option>
-          <option value="litre">litre</option>
-          <option value="box">box</option>
-        </select>
+          <input name="sku" value={form.sku} onChange={handleChange}
+            placeholder="SKU" className="input"
+          />
 
-        {/* PRICE */}
-        <input
-          type="number"
-          name="price"
-          value={form.price}
-          onChange={handleChange}
-          placeholder="Price"
-          className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500"
-        />
+          <input
+            type="number" name="price" value={form.price} onChange={handleChange} 
+            placeholder="Price" min="0" className="input"
+          />
 
-        {/* CATEGORY */}
-        <input
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-          placeholder="Category"
-          className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500"
-        />
-      </div>
+          <select name="unit" value={form.unit}
+            onChange={handleChange} className="input"
+          >
+            <option value="pcs">Pieces</option>
+            <option value="kg">Kg</option>
+            <option value="litre">Litre</option>
+            <option value="box">Box</option>
+          </select>
 
-      {/* ACTIONS */}
-      <div className="flex justify-end gap-3 mt-6">
-        <button
-          onClick={onClose}
-          className="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition"
-        >
-          Cancel
-        </button>
+          <input name="category" value={form.category} onChange={handleChange}
+            placeholder="Category" className="col-span-2 input"
+          />
+        </div>
 
-        <button
-          onClick={handleSubmit}
-          className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
-        >
-          Save
-        </button>
+        {/* Footer */}
+        <div className="flex justify-end gap-3 mt-6">
+          <button
+            onClick={onClose}
+            className="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+          >
+            Save Changes
+          </button>
+        </div>
       </div>
     </div>
   );
 }
+
 
 
