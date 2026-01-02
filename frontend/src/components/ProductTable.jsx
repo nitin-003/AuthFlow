@@ -139,7 +139,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
                   <div className="flex items-center justify-center gap-3">
                     <button
                       onClick={() => updateStock(p._id, -1)} disabled={p.quantity === 0}
-                      className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40"
+                      className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-400 disabled:opacity-40"
                     >
                       −
                     </button>
@@ -149,7 +149,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
                     </span>
 
                     <button onClick={() => updateStock(p._id, 1)}
-                      className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200"
+                      className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-400"
                     >
                       +
                     </button>

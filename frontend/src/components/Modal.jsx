@@ -5,7 +5,7 @@ export default function Modal({ isOpen, onClose, children }){
     if(!isOpen) return;
 
     const handleEsc = (e) => {
-      if(e.key === "Escape") onClose();
+      if (e.key === "Escape") onClose();
     };
 
     document.addEventListener("keydown", handleEsc);
@@ -21,7 +21,7 @@ export default function Modal({ isOpen, onClose, children }){
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      className="fixed inset-0 flex items-center justify-center px-4"
       role="dialog" aria-modal="true"
     >
       {/* BACKDROP (NO BLUR) */}
@@ -32,19 +32,19 @@ export default function Modal({ isOpen, onClose, children }){
       {/* MODAL CONTENT */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full max-w-4xl bg-white
-          rounded-2xl shadow-2xl border p-6 animate-fadeIn"
+        className="relative max-w-2xl bg-white
+          rounded-2xl shadow-2xl border animate-fadeIn"
       >
         {/* Close Button */}
         <button
           onClick={onClose}
           aria-label="Close modal"
-          className="absolute top-4 right-4 p-2 rounded-full
-            hover:bg-gray-100 text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="absolute top-2 right-2 p-2 rounded-full
+            text-gray-700 hover:bg-gray-400 hover:text-white transition-colors
+            focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           ✕
         </button>
-
         {children}
       </div>
     </div>

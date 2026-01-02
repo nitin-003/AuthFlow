@@ -42,8 +42,7 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
       </h3>
 
       <p className="text-sm text-gray-500 mb-5">
-        <span className="font-medium">{product.name}</span> (
-        {product.sku || "No SKU"})
+        <span className="font-medium">{product.name}</span> ({product.sku || "No SKU"})
       </p>
 
       <div className="space-y-4">
@@ -57,8 +56,7 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             placeholder="+ / - quantity"
-            className="w-full border rounded-lg px-4 py-2.5
-                       focus:ring-2 focus:ring-indigo-500"
+            className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500"
           />
           <p className="text-xs text-gray-400 mt-1">
             Use positive for stock in, negative for stock out
@@ -75,7 +73,7 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
             onChange={(e) => setReason(e.target.value)}
             placeholder="e.g. New stock arrival / Damaged items"
             className="w-full border rounded-lg px-4 py-2.5
-                       focus:ring-2 focus:ring-indigo-500"
+              focus:ring-2 focus:ring-indigo-500"
           />
         </div>
       </div>
@@ -94,7 +92,7 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
           onClick={handleSubmit}
           disabled={loading}
           className="px-5 py-2 rounded-lg bg-indigo-600 text-white
-                     hover:bg-indigo-700 transition disabled:opacity-50"
+            hover:bg-indigo-700 transition disabled:opacity-50"
         >
           {loading ? "Saving..." : "Save"}
         </button>
@@ -102,6 +100,4 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
     </div>
   );
 }
-
-
 

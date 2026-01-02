@@ -50,7 +50,7 @@ export default function InventoryLogs() {
         <div className="flex items-center justify-between">
           <button onClick={() => navigate(-1)}
             className="flex items-center gap-1 bg-gray-100 text-gray-700
-                       px-3 py-1.5 rounded-lg text-sm hover:bg-gray-300 transition"
+              px-3 py-1.5 rounded-lg text-sm hover:bg-gray-300 transition"
           >
             <ArrowLeft size={16} />
             <span className="hidden sm:inline">Back</span>
@@ -58,7 +58,7 @@ export default function InventoryLogs() {
 
           <h2
             className="text-xl sm:text-2xl font-bold
-                       bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text"
+              bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text"
           >
             Inventory Logs
           </h2>
@@ -67,7 +67,7 @@ export default function InventoryLogs() {
         </div>
 
         <div className="mt-3 h-1 w-24 rounded-full bg-gradient-to-r
-                        from-blue-500 to-purple-500 mx-auto" />
+          from-blue-500 to-purple-500 mx-auto" />
       </div>
 
       {/* TABLE CARD */}
@@ -94,11 +94,9 @@ export default function InventoryLogs() {
                 </tr>
               ) : (
                 logs.map((log, index) => (
-                  <tr
-                    key={log._id}
+                  <tr key={log._id}
                     className={`border-t transition
-                      ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                      hover:bg-blue-50`}
+                      ${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50`}
                   >
                     {/* PRODUCT */}
                     <td className="p-3 font-medium max-w-[200px] truncate">
