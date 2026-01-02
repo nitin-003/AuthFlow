@@ -60,8 +60,7 @@ export default function Products(){
           Product Management
         </h2>
 
-        <button
-          disabled={loading}
+        <button disabled={loading}
           onClick={() => {
             setSelectedProduct(null);
             setShowModal(true);
@@ -95,5 +94,4 @@ export default function Products(){
     </div>
   );
 }
-
 

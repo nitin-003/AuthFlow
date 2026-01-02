@@ -2,7 +2,7 @@ import { useState } from "react";
 import api from "../api/axios";
 import { toast } from "react-toastify";
 
-function EditUserModal({ user, setUsers, onClose }) {
+function EditUserModal({ user, setUsers, onClose }){
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
@@ -52,6 +52,4 @@ function EditUserModal({ user, setUsers, onClose }) {
 }
 
 export default EditUserModal;
-
-
 

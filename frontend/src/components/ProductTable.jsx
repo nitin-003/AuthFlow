@@ -44,7 +44,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
   const getStatus = (p) => p.stockStatus || p.status;
 
   const statusColor = (status) => {
-    switch (status) {
+    switch(status){
       case "IN_STOCK":
         return "bg-green-100 text-green-700";
       case "LOW_STOCK":
@@ -77,7 +77,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
   /* RESET ALERTS WHEN RESTOCKED */
   useEffect(() => {
     products.forEach((p) => {
-      if(getStatus(p) === "IN_STOCK") {
+      if(getStatus(p) === "IN_STOCK"){
         alertedRef.current.delete(p._id);
       }
     });
@@ -98,8 +98,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
         <h2 className="text-lg font-semibold text-gray-800">
           Products
         </h2>
-        <button
-          onClick={() => navigate("/inventory-logs")}
+        <button onClick={() => navigate("/inventory-logs")}
           className="text-sm font-medium text-blue-600 hover:underline"
         >
           View Inventory Logs →
@@ -130,28 +129,16 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
             </tr>
           ) : (
             products.map((p) => (
-              <tr
-                key={p._id}
-                className="border-t hover:bg-gray-50 transition"
-              >
-                <td className="p-4 text-center font-medium">
-                  {p.name}
-                </td>
-
-                <td className="p-4 text-center text-gray-500">
-                  {p.sku}
-                </td>
-
-                <td className="p-4 text-center font-medium">
-                  ₹{p.price}
-                </td>
+              <tr key={p._id} className="border-t hover:bg-gray-50 transition">
+                <td className="p-4 text-center font-medium">{p.name}</td>
+                <td className="p-4 text-center text-gray-500">{p.sku}</td>
+                <td className="p-4 text-center font-medium">₹{p.price}</td>
 
                 {/* Quantity controls */}
                 <td className="p-4">
                   <div className="flex items-center justify-center gap-3">
                     <button
-                      onClick={() => updateStock(p._id, -1)}
-                      disabled={p.quantity === 0}
+                      onClick={() => updateStock(p._id, -1)} disabled={p.quantity === 0}
                       className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-40"
                     >
                       −
@@ -161,8 +148,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
                       {p.quantity}
                     </span>
 
-                    <button
-                      onClick={() => updateStock(p._id, 1)}
+                    <button onClick={() => updateStock(p._id, 1)}
                       className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200"
                     >
                       +
@@ -170,10 +156,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
                   </div>
                 </td>
 
-                <td className="p-4 text-center">
-                  per {p.unit}
-                </td>
-
+                <td className="p-4 text-center">per {p.unit}</td>
                 <td className="p-4 text-center">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColor(
@@ -184,9 +167,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
                   </span>
                 </td>
 
-                <td className="p-4 text-center text-gray-600">
-                  {p.category}
-                </td>
+                <td className="p-4 text-center text-gray-600">{p.category}</td>
 
                 {/* Actions */}
                 <td className="p-4">
@@ -220,22 +201,17 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
       </table>
 
       {inventoryProduct && (
-        <UpdateInventoryModal
-          product={inventoryProduct}
-          onClose={() => setInventoryProduct(null)}
-          refresh={fetchProducts}
+        <UpdateInventoryModal product={inventoryProduct}
+          onClose={() => setInventoryProduct(null)} refresh={fetchProducts}
         />
       )}
 
       {editProduct && (
-        <EditProductModal
-          product={editProduct}
-          onClose={() => setEditProduct(null)}
-          refresh={fetchProducts}
+        <EditProductModal product={editProduct}
+          onClose={() => setEditProduct(null)} refresh={fetchProducts}
         />
       )}
     </div>
   );
 }
-
 
