@@ -33,22 +33,20 @@ function Home(){
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex">
 
-      {/* LEFT SIDEBAR */}
+      {/* Left Sidebar */}
       <div className="w-64 bg-white shadow-xl p-6">
         <h3 className="text-xl font-bold text-blue-600 mb-6">
           Dashboard
         </h3>
 
         <div className="space-y-3">
-          <button
-            onClick={() => navigate("/users")}
+          <button onClick={() => navigate("/users")}
             className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-200 text-gray-700 font-medium transition"
           >
             👤 User Management
           </button>
 
-          <button
-            onClick={() => navigate("/products")}
+          <button onClick={() => navigate("/products")}
             className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-200 text-gray-700 font-medium transition"
           >
             📦 Product Management
@@ -56,27 +54,25 @@ function Home(){
         </div>
       </div>
 
-      {/* MAIN CONTENT */}
+      {/* Main Content */}
       <div className="flex-1 relative">
 
-        {/* TOP BAR */}
+        {/* Top Bar */}
         <div className="absolute top-4 right-6 flex items-center gap-4">
-          <span
-            onClick={() => navigate("/user")}
+          <span onClick={() => navigate("/user")}
             className="cursor-pointer font-semibold text-gray-700 hover:text-blue-600"
           >
             {userName}
           </span>
 
-          <button
-            onClick={handleLogout}
+          <button onClick={handleLogout}
             className="bg-red-400 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
           >
             Logout
           </button>
         </div>
 
-        {/* CENTER CONTENT */}
+        {/* Center Content */}
         <div className="flex items-center justify-center min-h-screen">
           <div className="bg-white p-10 rounded-xl shadow-lg text-center">
             <h2 className="text-3xl font-bold text-blue-600 mb-2">

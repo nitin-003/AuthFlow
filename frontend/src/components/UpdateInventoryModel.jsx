@@ -8,14 +8,14 @@ export default function UpdateInventoryModal({ product, onClose, refresh }) {
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (!product) return null;
+  if(!product) return null;
 
   const handleSubmit = async () => {
-    if (!quantity || !reason) {
+    if(!quantity || !reason){
       return toast.error("Quantity and reason are required");
     }
 
-    try {
+    try{
       setLoading(true);
       await updateInventoryV2(product._id, {
         quantity: Number(quantity),
@@ -25,9 +25,11 @@ export default function UpdateInventoryModal({ product, onClose, refresh }) {
       toast.success("Inventory updated successfully");
       refresh();
       onClose();
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(err.response?.data?.message || "Update failed");
-    } finally {
+    } 
+    finally{
       setLoading(false);
     }
   };

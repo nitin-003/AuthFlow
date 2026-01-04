@@ -117,8 +117,7 @@ function UserManagement(){
 
       {/* Change Password Modal */}
       {passwordOpen && (
-        <ChangePasswordModal
-          user={selectedUser}
+        <ChangePasswordModal user={selectedUser}
           onClose={() => setPasswordOpen(false)}
         />
       )}

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-export default function Modal({ isOpen, onClose, children }){
+export default function Modal({ isOpen, onClose, children }) {
   useEffect(() => {
     if(!isOpen) return;
 
     const handleEsc = (e) => {
-      if (e.key === "Escape") onClose();
+      if(e.key === "Escape") onClose();
     };
 
     document.addEventListener("keydown", handleEsc);
@@ -20,35 +20,28 @@ export default function Modal({ isOpen, onClose, children }){
   if(!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center px-4"
-      role="dialog" aria-modal="true"
-    >
-      {/* BACKDROP (NO BLUR) */}
-      <div
-        className="absolute inset-0 bg-black/40" onClick={onClose}
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      {/* Backdrop */}
+      <div onClick={onClose}
+        className="absolute inset-0 bg-black/50 transition-opacity"
       />
 
-      {/* MODAL CONTENT */}
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative max-w-2xl bg-white
-          rounded-2xl shadow-2xl border animate-fadeIn"
+      {/* Modal */}
+      <div onClick={(e) => e.stopPropagation()}
+        className="relative z-10 w-full max-w-xl bg-white rounded-2xl shadow-2xl
+          transform transition-all duration-200 scale-100 opacity-100"
       >
         {/* Close Button */}
-        <button
-          onClick={onClose}
-          aria-label="Close modal"
-          className="absolute top-2 right-2 p-2 rounded-full
-            text-gray-700 hover:bg-gray-400 hover:text-white transition-colors
-            focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        <button onClick={onClose} aria-label="Close"
+          className="absolute top-3 right-3 h-9 w-9 flex items-center justify-center
+            rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition"
         >
           ✕
         </button>
+
         {children}
       </div>
     </div>
   );
 }
-
 

@@ -26,8 +26,7 @@ function Signup(){
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
+      <form onSubmit={handleSubmit}
         className="bg-white p-8 rounded-xl shadow-md w-full max-w-md"
       >
         <h3 className="text-2xl font-bold text-center text-blue-600 mb-6">
@@ -62,8 +61,7 @@ function Signup(){
 
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
-          <span
-            className="text-blue-600 cursor-pointer hover:underline"
+          <span className="text-blue-600 cursor-pointer hover:underline"
             onClick={() => navigate("/login")}
           >
             Login

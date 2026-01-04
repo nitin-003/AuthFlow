@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UpdateInventoryModal from "./UpdateInventoryModel";
 import EditProductModal from "./EditProductModel";
 
-export default function ProductTable({ products = [], fetchProducts, loading }){
+export default function ProductTable({ products = [], fetchProducts, loading }) {
   const navigate = useNavigate();
 
   const [inventoryProduct, setInventoryProduct] = useState(null);
@@ -13,7 +13,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
 
   const alertedRef = useRef(new Set());
 
-  /* DELETE PRODUCT */
+  /* Delete Product */
   const handleDelete = async (id) => {
     if(!window.confirm("Delete this product permanently?")) return;
 
@@ -27,12 +27,11 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
     }
   };
 
-  /* QUICK STOCK UPDATE */
+  /* Quick Stock Update */
   const updateStock = async (id, qty) => {
     try{
       await api.patch(`/products/inventory/v2/${id}`, {
-        quantity: qty,
-        reason: qty > 0 ? "Quick add" : "Quick remove",
+        quantity: qty, reason: qty > 0 ? "Quick add" : "Quick remove",
       });
       fetchProducts();
     } 
@@ -44,7 +43,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
   const getStatus = (p) => p.stockStatus || p.status;
 
   const statusColor = (status) => {
-    switch(status){
+    switch (status) {
       case "IN_STOCK":
         return "bg-green-100 text-green-700";
       case "LOW_STOCK":
@@ -74,7 +73,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
     });
   }, [products]);
 
-  /* RESET ALERTS WHEN RESTOCKED */
+  /* Reset Alerts */
   useEffect(() => {
     products.forEach((p) => {
       if(getStatus(p) === "IN_STOCK"){
@@ -95,9 +94,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
     <div className="bg-white rounded-2xl shadow-lg overflow-x-auto">
       {/* Header */}
       <div className="flex justify-between items-center px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Products
-        </h2>
+        <h2 className="text-lg font-semibold text-gray-800">Products</h2>
         <button onClick={() => navigate("/inventory-logs")}
           className="text-sm font-medium text-blue-600 hover:underline"
         >
@@ -105,10 +102,10 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
         </button>
       </div>
 
-      {/* Table */}
       <table className="w-full text-sm text-gray-700">
         <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
           <tr>
+            <th className="p-4 text-center">Image</th>
             <th className="p-4 text-center">Name</th>
             <th className="p-4 text-center">SKU</th>
             <th className="p-4 text-center">Price</th>
@@ -123,18 +120,34 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
         <tbody>
           {products.length === 0 ? (
             <tr>
-              <td colSpan="8" className="text-center py-10 text-gray-400">
+              <td colSpan="9" className="text-center py-10 text-gray-400">
                 No products found
               </td>
             </tr>
           ) : (
             products.map((p) => (
-              <tr key={p._id} className="border-t hover:bg-gray-50 transition">
+              <tr key={p._id} className="border-t hover:bg-gray-50">
+                {/* Image */}
+                <td className="p-4 text-center">
+                  <div className="w-12 h-12 mx-auto rounded-lg border overflow-hidden">
+                    {p.image ? (
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-xs text-gray-400">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                </td>
+
                 <td className="p-4 text-center font-medium">{p.name}</td>
                 <td className="p-4 text-center text-gray-500">{p.sku}</td>
                 <td className="p-4 text-center font-medium">₹{p.price}</td>
 
-                {/* Quantity controls */}
                 <td className="p-4">
                   <div className="flex items-center justify-center gap-3">
                     <button
@@ -143,12 +156,11 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
                     >
                       −
                     </button>
-
                     <span className="font-semibold w-6 text-center">
                       {p.quantity}
                     </span>
-
-                    <button onClick={() => updateStock(p._id, 1)}
+                    <button
+                      onClick={() => updateStock(p._id, 1)}
                       className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-400"
                     >
                       +
@@ -157,6 +169,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
                 </td>
 
                 <td className="p-4 text-center">per {p.unit}</td>
+
                 <td className="p-4 text-center">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColor(
@@ -169,26 +182,20 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
 
                 <td className="p-4 text-center text-gray-600">{p.category}</td>
 
-                {/* Actions */}
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
-                    <button
-                      onClick={() => setInventoryProduct(p)}
-                      className="px-3 py-1 text-md rounded-md bg-blue-50 text-blue-600 hover:bg-blue-200"
+                    <button onClick={() => setInventoryProduct(p)}
+                      className="px-3 py-1 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-200"
                     >
                       Update Qty
                     </button>
-
-                    <button
-                      onClick={() => setEditProduct(p)}
-                      className="px-3 py-1 text-md rounded-md bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
+                    <button onClick={() => setEditProduct(p)}
+                      className="px-3 py-1 rounded-md bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
                     >
                       Edit
                     </button>
-
-                    <button
-                      onClick={() => handleDelete(p._id)}
-                      className="px-3 py-1 text-md rounded-md bg-red-50 text-red-600 hover:bg-red-200"
+                    <button onClick={() => handleDelete(p._id)}
+                      className="px-3 py-1 rounded-md bg-red-50 text-red-600 hover:bg-red-200"
                     >
                       Delete
                     </button>
@@ -201,17 +208,22 @@ export default function ProductTable({ products = [], fetchProducts, loading }){
       </table>
 
       {inventoryProduct && (
-        <UpdateInventoryModal product={inventoryProduct}
-          onClose={() => setInventoryProduct(null)} refresh={fetchProducts}
+        <UpdateInventoryModal
+          product={inventoryProduct}
+          onClose={() => setInventoryProduct(null)}
+          refresh={fetchProducts}
         />
       )}
 
       {editProduct && (
-        <EditProductModal product={editProduct}
-          onClose={() => setEditProduct(null)} refresh={fetchProducts}
+        <EditProductModal
+          product={editProduct}
+          onClose={() => setEditProduct(null)}
+          refresh={fetchProducts}
         />
       )}
     </div>
   );
 }
+
 

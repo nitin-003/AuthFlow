@@ -45,7 +45,7 @@ export default function InventoryLogs() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
-      {/* HEADER */}
+      {/* Header */}
       <div className="mb-0">
         <div className="flex items-center justify-between">
           <button onClick={() => navigate(-1)}
@@ -70,7 +70,7 @@ export default function InventoryLogs() {
           from-blue-500 to-purple-500 mx-auto" />
       </div>
 
-      {/* TABLE CARD */}
+      {/* Table Card */}
       <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
         <div className="overflow-x-auto rounded-xl border">
           <table className="min-w-[900px] w-full text-sm">
@@ -98,7 +98,7 @@ export default function InventoryLogs() {
                     className={`border-t transition
                       ${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-blue-50`}
                   >
-                    {/* PRODUCT */}
+                    {/* Product */}
                     <td className="p-3 font-medium max-w-[200px] truncate">
                       {log.product?.name || (
                         <span className="text-gray-500 italic">
@@ -107,7 +107,7 @@ export default function InventoryLogs() {
                       )}
                     </td>
 
-                    {/* TYPE */}
+                    {/* Type */}
                     <td className="p-3 text-center">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1
@@ -127,22 +127,22 @@ export default function InventoryLogs() {
                       </span>
                     </td>
 
-                    {/* QTY */}
+                    {/* Qty */}
                     <td className="p-3 text-center font-semibold">
                       {log.quantity}
                     </td>
 
-                    {/* REASON */}
+                    {/* Reason */}
                     <td className="p-3 text-gray-700 max-w-[220px] truncate">
                       {log.reason || "-"}
                     </td>
 
-                    {/* USER */}
+                    {/* User */}
                     <td className="p-3">
                       {log.performedBy?.name || "System"}
                     </td>
 
-                    {/* DATE */}
+                    {/* Date */}
                     <td className="p-3 text-center text-gray-500 text-xs">
                       {new Date(log.createdAt).toLocaleDateString()}{" "}
                       <br />
@@ -158,5 +158,4 @@ export default function InventoryLogs() {
     </div>
   );
 }
-
 

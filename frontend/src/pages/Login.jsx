@@ -27,9 +27,7 @@ function Login(){
       <form onSubmit={handleSubmit}
         className="bg-white p-8 rounded-xl shadow-md w-full max-w-md"
       >
-        <h3 className="text-2xl font-bold text-center text-blue-600 mb-6">
-          Login Page
-        </h3>
+        <h3 className="text-2xl font-bold text-center text-blue-600 mb-6">Login Page</h3>
 
         <div className="space-y-4">
           <input type="email" placeholder="Email" value={email}
@@ -38,16 +36,14 @@ function Login(){
             required
           />
 
-          <input
-            type="password" placeholder="Password" value={password}
+          <input type="password" placeholder="Password" value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
 
-        <button
-          type="submit"
+        <button type="submit"
           className="w-full mt-6 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
         >
           Login
@@ -55,8 +51,7 @@ function Login(){
 
         <p className="text-center text-sm text-gray-600 mt-4">
           Don't have an account?{" "}
-          <span
-            className="text-blue-600 cursor-pointer hover:underline"
+          <span className="text-blue-600 cursor-pointer hover:underline"
             onClick={() => navigate("/signup")}
           >
             Signup
@@ -68,4 +63,5 @@ function Login(){
 }
 
 export default Login;
+
 

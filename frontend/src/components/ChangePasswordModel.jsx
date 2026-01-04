@@ -33,8 +33,7 @@ function ChangePasswordModal({ user, onClose }) {
       <div className="bg-white p-5 rounded w-96">
         <h3 className="font-semibold mb-3">Change Password</h3>
 
-        <input
-          type="password" placeholder="New Password" value={password}
+        <input type="password" placeholder="New Password" value={password}
           onChange={e => setPassword(e.target.value)}
           className="w-full mb-4 border p-2"
         />
@@ -42,8 +41,7 @@ function ChangePasswordModal({ user, onClose }) {
         <div className="flex justify-end gap-2">
           <button onClick={onClose}>Cancel</button>
 
-          <button
-            onClick={handleChange} disabled={loading}
+          <button onClick={handleChange} disabled={loading}
             className="bg-green-600 text-white px-4 py-1 rounded disabled:opacity-60"
           >
             {loading ? "Updating..." : "Update"}

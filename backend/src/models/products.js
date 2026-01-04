@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema(
       unique: true,
       uppercase: true,
       trim: true,
-      index: true, 
+      index: true,
     },
 
     price: {
@@ -23,7 +23,6 @@ const productSchema = new mongoose.Schema(
       min: 0,
     },
 
-    // Quantity is always interpreted using `unit`
     quantity: {
       type: Number,
       required: true,
@@ -55,6 +54,11 @@ const productSchema = new mongoose.Schema(
       default: "IN_STOCK",
     },
 
+    image: {
+      data: Buffer,
+      contentType: String,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -62,13 +66,9 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
   },
-  {
-    timestamps: true,
-    versionKey: false,
-  }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = mongoose.model("Product", productSchema);
-
 
 

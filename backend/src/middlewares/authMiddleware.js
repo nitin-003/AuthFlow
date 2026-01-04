@@ -1,7 +1,12 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.token;
+  // Allow CORS preflight
+  if(req.method === "OPTIONS"){
+    return next();
+  }
+
+  const token = req.cookies?.token;
 
   if(!token){
     return res.status(401).json({ message: "Not authenticated" });
@@ -10,11 +15,13 @@ module.exports = (req, res, next) => {
   try{
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    next();
+    return next();
   } 
   catch(err){
-    return res.status(401).json({ message: "Invalid Token" });
+    if(err.name === "TokenExpiredError"){
+      return res.status(401).json({ message: "Token expired" });
+    }
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
-
 

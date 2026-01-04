@@ -3,33 +3,25 @@ import api from "../api/axios";
 import { toast } from "react-toastify";
 
 export default function ProductForm({ fetchProducts, onClose }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    sku: "",
-    unit: "pcs",
-    price: "",
-    quantity: "",
-    category: "",
-    minStockLevel: "",
+  const [formData, setFormData] = useState({ name: "", sku: "",
+    unit: "pcs", price: "", quantity: "", category: "", minStockLevel: "",
   });
 
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((p) => ({ ...p, [name]: value }));
   };
 
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      sku: "",
-      unit: "pcs",
-      price: "",
-      quantity: "",
-      category: "",
-      minStockLevel: "",
-    });
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
@@ -42,19 +34,24 @@ export default function ProductForm({ fetchProducts, onClose }) {
     try{
       setLoading(true);
 
-      await api.post("/products", {
-        name: formData.name.trim(),
-        sku: formData.sku.trim(),
-        unit: formData.unit,
-        price: Number(formData.price || 0),
-        quantity: Number(formData.quantity || 0),
-        category: formData.category.trim(),
-        minStockLevel: Number(formData.minStockLevel || 0),
+      const data = new FormData();
+
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value);
       });
 
-      toast.success("Product created successfully");
+      data.set("price", Number(formData.price || 0));
+      data.set("quantity", Number(formData.quantity || 0));
+      data.set("minStockLevel", Number(formData.minStockLevel || 0));
+
+      if(image) data.append("image", image);
+
+      await api.post("/products", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      toast.success("Product added successfully");
       fetchProducts();
-      resetForm();
       onClose();
     } 
     catch(err){
@@ -65,94 +62,86 @@ export default function ProductForm({ fetchProducts, onClose }) {
     }
   };
 
-  const inputClass =
-    "w-full px-3 py-2 border rounded-lg text-sm bg-white focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:border-indigo-300 transition";
+  const input = "w-full rounded-xl border border-gray-300 px-3 py-2 text-sm " +
+    "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition";
 
-  const labelClass =
-    "text-xs font-medium text-gray-600 mb-1 block";
+  const label = "text-xs font-semibold text-gray-600";
 
   return (
-    <form
-        onSubmit={handleSubmit}
-        className="w-[450px] bg-white rounded-2xl shadow-lg flex flex-col"
-    >
-      {/* -------- HEADER -------- */}
-      <div className="px-5 py-4 border-b">
-        <h2 className="text-base font-semibold text-gray-800">
+    <form onSubmit={handleSubmit} className="flex flex-col">
+      {/* Header */}
+      <div className="px-6 py-5 border-b">
+        <h2 className="text-lg font-semibold text-gray-800">
           Add New Product
         </h2>
-        <p className="text-xs text-gray-500 mt-1">
-          Enter basic product details for inventory tracking
-        </p>
+        <p className="text-sm text-gray-500 mt-1">Add inventory details for tracking</p>
       </div>
 
-      {/* -------- BODY -------- */}
-      <div className="px-5 py-4 space-y-4 flex-1">
+      {/* Body */}
+      <div className="px-6 py-6 space-y-6">
         {/* Product Name */}
-        <div>
-          <label className={labelClass}>Product Name *</label>
-          <input
-            autoFocus
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="e.g. Wireless Mouse"
-            className={inputClass}
-            required
+        <div className="space-y-1">
+          <label className={label}>Product Name *</label>
+          <input autoFocus name="name"
+            value={formData.name} onChange={handleChange} placeholder="Wireless Mouse" className={input}
           />
         </div>
 
-        {/* SKU / Price / Qty */}
-        <div className="grid grid-cols-3 gap-3">
-          <div>
-            <label className={labelClass}>SKU *</label>
-            <input
-              name="sku"
-              value={formData.sku}
-              onChange={handleChange}
-              placeholder="SKU-001"
-              className={inputClass}
-              required
+        {/* Product Image */}
+        <div className="space-y-2">
+          <label className={label}>Product Image</label>
+
+          <div className="flex items-center gap-4">
+            <div className="w-20 h-20 rounded-xl border bg-gray-50 overflow-hidden flex items-center justify-center">
+              {preview ? (
+                <img src={preview} alt="Preview"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-xs text-gray-400">No Image</span>
+              )}
+            </div>
+
+            <label className="cursor-pointer">
+              <input type="file" accept="image/*"
+                onChange={handleImageChange} className="hidden"
+              />
+              <span className="px-4 py-2 text-sm rounded-xl bg-gray-200 hover:bg-gray-300 transition">
+                Upload Image
+              </span>
+            </label>
+          </div>
+        </div>
+
+        {/* SKU / Price / Quantity */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-1">
+            <label className={label}>SKU *</label>
+            <input name="sku" value={formData.sku} onChange={handleChange}
+              placeholder="SKU-001" className={input}
             />
           </div>
 
-          <div>
-            <label className={labelClass}>Price</label>
-            <input
-              type="number"
-              min="0"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              placeholder="Rs 0"
-              className={inputClass}
+          <div className="space-y-1">
+            <label className={label}>Price</label>
+            <input type="number" min="0" name="price" value={formData.price}
+              onChange={handleChange} placeholder="₹ 0" className={input}
             />
           </div>
 
-          <div>
-            <label className={labelClass}>Quantity</label>
-            <input
-              type="number"
-              min="0"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              placeholder="0"
-              className={inputClass}
+          <div className="space-y-1">
+            <label className={label}>Quantity</label>
+            <input type="number" min="0" name="quantity" value={formData.quantity}
+              onChange={handleChange} placeholder="0" className={input}
             />
           </div>
         </div>
 
-        {/* Unit / Min / Category */}
-        <div className="grid grid-cols-3 gap-3">
-          <div>
-            <label className={labelClass}>Unit</label>
-            <select
-              name="unit"
-              value={formData.unit}
-              onChange={handleChange}
-              className={inputClass}
-            >
+        {/* Unit / Min Stock / Category */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-1">
+            <label className={label}>Unit</label>
+            <select name="unit" value={formData.unit} onChange={handleChange} className={input}>
               <option value="pcs">pcs</option>
               <option value="kg">kg</option>
               <option value="litre">litre</option>
@@ -160,39 +149,26 @@ export default function ProductForm({ fetchProducts, onClose }) {
             </select>
           </div>
 
-          <div>
-            <label className={labelClass}>Min Stock</label>
-            <input
-              type="number"
-              min="0"
-              name="minStockLevel"
-              value={formData.minStockLevel}
-              onChange={handleChange}
-              placeholder="0"
-              className={inputClass}
+          <div className="space-y-1">
+            <label className={label}>Min Stock</label>
+            <input type="number" min="0" name="minStockLevel"
+              value={formData.minStockLevel} onChange={handleChange} className={input}
             />
           </div>
 
-          <div>
-            <label className={labelClass}>Category *</label>
-            <input
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              placeholder="Electronics"
-              className={inputClass}
-              required
+          <div className="space-y-1">
+            <label className={label}>Category *</label>
+            <input name="category" value={formData.category} onChange={handleChange}
+              placeholder="Electronics" className={input}
             />
           </div>
         </div>
       </div>
 
-      {/* -------- FOOTER -------- */}
-      <div className="px-5 py-4 border-t bg-gray-50 flex justify-end gap-3 rounded-b-2xl">
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 text-sm rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+      {/* Footer */}
+      <div className="px-6 py-4 bg-gray-50 border-t flex justify-end gap-3">
+        <button type="button" onClick={onClose}
+          className="px-4 py-2 rounded-xl text-sm bg-gray-200 hover:bg-gray-300 transition"
         >
           Cancel
         </button>
@@ -200,7 +176,9 @@ export default function ProductForm({ fetchProducts, onClose }) {
         <button
           type="submit"
           disabled={loading}
-          className="px-4 py-2 text-sm rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 transition"
+          className="px-5 py-2 rounded-xl text-sm font-semibold text-white
+            bg-indigo-600 hover:bg-indigo-700
+            disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           {loading ? "Saving..." : "Add Product"}
         </button>

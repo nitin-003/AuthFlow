@@ -10,14 +10,12 @@ router.put("/", authMiddleware, updateUser);
 // delete logged-in user
 router.delete("/", authMiddleware, deleteUser);
 
-// get all users (for drawer)
+// get all users 
 router.get("/all", authMiddleware, getAllUsers);
-// update any user (edit / change password)
+// update any user
 router.put("/:id", authMiddleware, updateUserById);
 // delete any user
 router.delete("/:id", authMiddleware, deleteUserById);
 
 module.exports = router;
-
-
 

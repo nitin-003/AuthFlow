@@ -46,15 +46,12 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
       </p>
 
       <div className="space-y-4">
-        {/* QUANTITY */}
+        {/* Quantity */}
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-1">
             Quantity Change
           </label>
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+          <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)}
             placeholder="+ / - quantity"
             className="w-full border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500"
           />
@@ -63,14 +60,12 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
           </p>
         </div>
 
-        {/* REASON */}
+        {/* Reason */}
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-1">
             Reason (optional)
           </label>
-          <input
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
+          <input value={reason} onChange={(e) => setReason(e.target.value)}
             placeholder="e.g. New stock arrival / Damaged items"
             className="w-full border rounded-lg px-4 py-2.5
               focus:ring-2 focus:ring-indigo-500"
@@ -78,19 +73,15 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
         </div>
       </div>
 
-      {/* ACTIONS */}
+      {/* Actions */}
       <div className="flex justify-end gap-3 mt-6">
-        <button
-          onClick={onClose}
-          disabled={loading}
+        <button onClick={onClose} disabled={loading}
           className="px-5 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition"
         >
           Cancel
         </button>
 
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
+        <button onClick={handleSubmit} disabled={loading}
           className="px-5 py-2 rounded-lg bg-indigo-600 text-white
             hover:bg-indigo-700 transition disabled:opacity-50"
         >
@@ -100,4 +91,5 @@ export default function InventoryModal({ product, onClose, onSuccess }) {
     </div>
   );
 }
+
 
