@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Products from './pages/Products';
 import InventoryLogs from './pages/InventoryLogs';
+import Category from './pages/Categories';
+import AddCategory from './components/AddCategory';
 
 function App(){
   return (
@@ -25,6 +27,8 @@ function App(){
         <Route path="/users" element={<UserManagement />} />
         <Route path="/products" element={<Products />} /> 
         <Route path="/inventory-logs" element={<InventoryLogs />} />
+        <Route path="/categories" element={<Category />} /> 
+        <Route path="/categories/add" element={<AddCategory />} />
       </Routes>
 
       <ToastContainer position="top-right" autoClose={2000} />

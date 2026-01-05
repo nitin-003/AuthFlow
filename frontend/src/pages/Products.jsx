@@ -46,7 +46,7 @@ export default function Products(){
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      {/* HEADER */}
+      {/* Header */}
       <div className="relative mb-8 flex items-center">
         <button
           onClick={() => navigate(-1)}

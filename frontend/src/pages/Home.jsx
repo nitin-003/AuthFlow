@@ -51,6 +51,12 @@ function Home(){
           >
             📦 Product Management
           </button>
+
+          <button onClick={() => navigate("/categories")}
+            className="w-full text-left px-4 py-3 rounded-lg bg-gray-50 hover:bg-blue-200 text-gray-700 font-medium transition"
+          >
+            🗂️ Category Management
+          </button>
         </div>
       </div>
 

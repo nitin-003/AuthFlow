@@ -9,33 +9,41 @@ connectDB();
 
 const app = express();
 
-/* cors */
-const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+/* CORS */
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-app.use(cors(corsOptions));
-
-/* Middlewares */
+/* MIDDLEWARE  */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-/* Routes */
+/* ROUTES */
 app.use("/auth", require("./routes/authRoute"));
 app.use("/user", require("./routes/userRoute"));
 app.use("/products", require("./routes/productRoute"));
+app.use("/categories", require("./routes/categoryRoute"));
+app.use("/subcategories", require("./routes/subcategoryRoute"));
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("API is running");
+});
+
+/* GLOBAL ERROR HANDLER  */
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: "Internal Server Error" });
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
 
 
