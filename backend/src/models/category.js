@@ -18,10 +18,6 @@ const categorySchema = new mongoose.Schema(
       data: Buffer,          
       contentType: String, 
     },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
   },
   { timestamps: true }
 );

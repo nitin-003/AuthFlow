@@ -55,7 +55,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }) 
     }
   };
 
-  /* STOCK ALERTS */
+  /* Stock Alerts */
   useEffect(() => {
     products.forEach((p) => {
       const status = getStatus(p);

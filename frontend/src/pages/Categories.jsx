@@ -5,7 +5,7 @@ import CategoryTable from "../components/CategoryTable";
 import AddCategory from "../components/AddCategory";
 import api from "../api/axios";
 
-function Category() {
+function Category(){
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
@@ -19,10 +19,12 @@ function Category() {
       setError("");
       const res = await api.get("/categories");
       setCategories(res.data);
-    } catch (err) {
+    } 
+    catch(err){
       console.error("Failed to fetch categories", err);
       setError("Failed to load categories");
-    } finally {
+    } 
+    finally{
       setLoading(false);
     }
   }, []);
@@ -33,10 +35,9 @@ function Category() {
 
   return (
     <div className="p-6">
-      {/* HEADER */}
+      {/* Header */}
       <div className="relative mb-8 flex flex-wrap items-center justify-between gap-4">
-        <button
-          onClick={() => navigate(-1)}
+        <button onClick={() => navigate(-1)} 
           className="flex items-center gap-1 bg-gray-200 px-3 py-1.5 
           rounded-lg text-sm hover:bg-gray-300"
         >
@@ -48,9 +49,8 @@ function Category() {
           Category Management
         </h2>
 
-        {/* OPEN MODAL */}
-        <button
-          onClick={() => setOpenAddModal(true)}
+        {/* Open Modal */}
+        <button onClick={() => setOpenAddModal(true)}
           className="flex items-center gap-1 bg-blue-600 text-white px-4 py-2 
           rounded-lg hover:bg-blue-700"
         >
@@ -59,21 +59,20 @@ function Category() {
         </button>
       </div>
 
-      {/* ERROR */}
       {error && (
         <div className="mb-4 rounded bg-red-100 px-4 py-2 text-red-600">
           {error}
         </div>
       )}
 
-      {/* TABLE */}
+      {/* Table */}
       <CategoryTable
         categories={categories}
         loading={loading}
         refreshCategories={fetchCategories}
       />
 
-      {/* ADD CATEGORY MODAL */}
+      {/* Add Category Modal */}
       {openAddModal && (
         <AddCategory
           onClose={() => setOpenAddModal(false)}
@@ -88,4 +87,5 @@ function Category() {
 }
 
 export default Category;
+
 

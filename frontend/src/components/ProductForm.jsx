@@ -27,7 +27,7 @@ export default function ProductForm({ fetchProducts, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.sku || !formData.category) {
+    if(!formData.name || !formData.sku || !formData.category){
       return toast.error("Name, SKU and Category are required");
     }
 
@@ -43,7 +43,7 @@ export default function ProductForm({ fetchProducts, onClose }) {
       data.set("quantity", Number(formData.quantity || 0));
       data.set("minStockLevel", Number(formData.minStockLevel || 0));
 
-      if (image) data.append("image", image);
+      if(image) data.append("image", image);
 
       await api.post("/products", data, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -52,15 +52,16 @@ export default function ProductForm({ fetchProducts, onClose }) {
       toast.success("Product added successfully");
       fetchProducts();
       onClose();
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(err.response?.data?.message || "Product creation failed");
-    } finally {
+    } 
+    finally{
       setLoading(false);
     }
   };
 
-  const input =
-    "w-full rounded-xl border border-gray-300 px-3 py-2 text-sm " +
+  const input = "w-full rounded-xl border border-gray-300 px-3 py-2 text-sm " +
     "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition";
 
   const label = "text-xs font-bold text-gray-600";
@@ -68,14 +69,9 @@ export default function ProductForm({ fetchProducts, onClose }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="
-        flex flex-col
-        w-full
-        max-h-[90vh]
-        overflow-hidden
-      "
+      className="flex flex-col w-full max-h-[90vh] overflow-hidden"
     >
-      {/* HEADER */}
+      {/* Header */}
       <div className="px-4 sm:px-6 py-4 border-b">
         <h2 className="text-lg font-semibold text-gray-800">
           Add New Product
@@ -85,18 +81,13 @@ export default function ProductForm({ fetchProducts, onClose }) {
         </p>
       </div>
 
-      {/* BODY (SCROLLABLE) */}
+      {/* Body */}
       <div className="px-4 sm:px-6 py-6 space-y-6 overflow-y-auto flex-1">
         {/* Product Name */}
         <div className="space-y-1">
           <label className={label}>Product Name *</label>
-          <input
-            autoFocus
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="e.g. Wireless Mouse"
-            className={input}
+          <input autoFocus name="name" value={formData.name}
+            onChange={handleChange} placeholder="e.g. Wireless Mouse" className={input}
           />
         </div>
 
@@ -107,9 +98,7 @@ export default function ProductForm({ fetchProducts, onClose }) {
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 rounded-xl border bg-gray-50 overflow-hidden flex items-center justify-center">
               {preview ? (
-                <img
-                  src={preview}
-                  alt="Preview"
+                <img src={preview} alt="Preview"
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -118,11 +107,8 @@ export default function ProductForm({ fetchProducts, onClose }) {
             </div>
 
             <label className="cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
+              <input type="file" accept="image/*"
+                onChange={handleImageChange} className="hidden"
               />
               <span className="px-4 py-2 text-sm rounded-xl bg-gray-200 hover:bg-gray-300 transition">
                 Upload Image
@@ -135,38 +121,22 @@ export default function ProductForm({ fetchProducts, onClose }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-1">
             <label className={label}>SKU *</label>
-            <input
-              name="sku"
-              value={formData.sku}
-              onChange={handleChange}
-              placeholder="e.g. SKU-001"
-              className={input}
+            <input name="sku" value={formData.sku}
+              onChange={handleChange} placeholder="e.g. SKU-001" className={input}
             />
           </div>
 
           <div className="space-y-1">
             <label className={label}>Price</label>
-            <input
-              type="number"
-              min="0"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              placeholder="Rs 0"
-              className={input}
+            <input type="number" min="0" name="price" value={formData.price} 
+              onChange={handleChange} placeholder="Rs 0" className={input}
             />
           </div>
 
           <div className="space-y-1">
             <label className={label}>Quantity</label>
-            <input
-              type="number"
-              min="0"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              placeholder="0"
-              className={input}
+            <input type="number" min="0" name="quantity" value={formData.quantity}
+              onChange={handleChange} placeholder="0" className={input}
             />
           </div>
         </div>
@@ -175,11 +145,8 @@ export default function ProductForm({ fetchProducts, onClose }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-1">
             <label className={label}>Unit</label>
-            <select
-              name="unit"
-              value={formData.unit}
-              onChange={handleChange}
-              className={input}
+            <select name="unit" value={formData.unit}
+              onChange={handleChange} className={input}
             >
               <option value="pcs">pcs</option>
               <option value="kg">kg</option>
@@ -190,25 +157,16 @@ export default function ProductForm({ fetchProducts, onClose }) {
 
           <div className="space-y-1">
             <label className={label}>Min Stock</label>
-            <input
-              type="number"
-              min="0"
-              name="minStockLevel"
-              value={formData.minStockLevel}
-              onChange={handleChange}
-              placeholder="0"
-              className={input}
+            <input type="number" min="0" name="minStockLevel"
+              value={formData.minStockLevel} onChange={handleChange}
+              placeholder="0" className={input}
             />
           </div>
 
           <div className="space-y-1">
             <label className={label}>Category *</label>
-            <input
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              placeholder="e.g. Electronics"
-              className={input}
+            <input name="category" value={formData.category} onChange={handleChange}
+              placeholder="e.g. Electronics" className={input}
             />
           </div>
         </div>
@@ -216,22 +174,16 @@ export default function ProductForm({ fetchProducts, onClose }) {
 
       {/* FOOTER */}
       <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t flex justify-end gap-3">
-        <button
-          type="button"
-          onClick={onClose}
+        <button type="button" onClick={onClose}
           className="px-4 py-2 rounded-xl text-sm bg-gray-200 hover:bg-gray-300 transition"
         >
           Cancel
         </button>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="
-            px-5 py-2 rounded-xl text-sm font-semibold text-white
-            bg-indigo-600 hover:bg-indigo-700
-            disabled:opacity-60 disabled:cursor-not-allowed transition
-          "
+        <button type="submit" disabled={loading}
+          className="px-5 py-2 rounded-xl text-sm font-semibold text-white
+            bg-indigo-600 hover:bg-indigo-700 
+            disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
           {loading ? "Saving..." : "Add Product"}
         </button>
@@ -239,4 +191,5 @@ export default function ProductForm({ fetchProducts, onClose }) {
     </form>
   );
 }
+
 

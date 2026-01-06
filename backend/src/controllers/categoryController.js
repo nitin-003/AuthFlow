@@ -18,10 +18,7 @@ exports.createCategory = async (req, res) => {
       return res.status(400).json({ message: "Category already exists" });
     }
 
-    const categoryData = {
-      name: name.toLowerCase(),
-      description,
-    };
+    const categoryData = { name: name.toLowerCase(), description };
 
     if(req.file){
       categoryData.image = {
@@ -47,8 +44,7 @@ exports.createCategory = async (req, res) => {
 exports.getCategories = async (req, res) => {
   try{
     const categories = await Category.find()
-      .select("-image.data")
-      .sort({ createdAt: -1 });
+    .select("-image.data").sort({ createdAt: -1 });
 
     res.status(200).json(categories);
   } 

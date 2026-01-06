@@ -74,7 +74,7 @@ export default function Products(){
         </button>
       </div>
 
-      {/* TABLE */}
+      {/* Table */}
       <ProductTable products={products} loading={loading}
         fetchProducts={fetchProducts}
         onEdit={(product) => {
@@ -83,7 +83,7 @@ export default function Products(){
         }}
       />
 
-      {/* MODAL */}
+      {/* Modal */}
       <Modal isOpen={showModal} onClose={closeModal}>
         <ProductForm
           fetchProducts={fetchProducts}

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { toast } from "react-toastify";
 
-export default function InventoryLogs() {
+export default function InventoryLogs(){
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

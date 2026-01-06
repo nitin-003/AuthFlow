@@ -8,41 +8,43 @@ export default function SubCategoryList({ categoryId }) {
   const [loading, setLoading] = useState(false);
 
   const fetchSubCategories = async () => {
-    try {
+    try{
       setLoading(true);
       const res = await api.get(`/subcategories?categoryId=${categoryId}`);
       setSubcategories(res.data);
-    } catch (err) {
+    } 
+    catch(err){
       toast.error("Failed to load subcategories");
-    } finally {
+    } 
+    finally{
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchSubCategories();
-    // eslint-disable-next-line
   }, [categoryId]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this subcategory permanently?")) return;
+    if(!window.confirm("Delete this subcategory permanently?")) return;
 
-    try {
+    try{
       await api.delete(`/subcategories/${id}`);
       toast.success("Subcategory deleted");
       fetchSubCategories();
-    } catch {
+    } 
+    catch{
       toast.error("Delete failed");
     }
   };
 
-  if (loading) {
+  if(loading){
     return (
       <p className="text-sm text-gray-500 py-2">Loading subcategories...</p>
     );
   }
 
-  if (subcategories.length === 0) {
+  if(subcategories.length === 0){
     return (
       <p className="text-sm text-gray-400 py-2">No subcategories found</p>
     );
@@ -51,8 +53,7 @@ export default function SubCategoryList({ categoryId }) {
   return (
     <div className="mt-2 space-y-2">
       {subcategories.map((sub) => (
-        <div
-          key={sub._id}
+        <div key={sub._id}
           className="flex items-center justify-between rounded-lg 
           border bg-white px-4 py-2 shadow-sm hover:bg-gray-50"
         >

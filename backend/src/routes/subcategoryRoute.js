@@ -1,7 +1,6 @@
 const express = require("express");
 const { createSubCategory, getSubCategories, getSubCategoryImage, 
     updateSubCategory, deleteSubCategory } = require("../controllers/subCategory.Controller");
-
 const upload = require("../middlewares/uploadMiddleware");
 
 const router = express.Router();
@@ -13,5 +12,4 @@ router.patch("/:id", upload.single("image"), updateSubCategory);
 router.delete("/:id", deleteSubCategory);
 
 module.exports = router;
-
 

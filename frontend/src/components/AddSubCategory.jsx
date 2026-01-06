@@ -3,11 +3,7 @@ import { toast } from "react-toastify";
 import api from "../api/axios";
 import { ImagePlus } from "lucide-react";
 
-export default function AddSubCategory({
-  categoryId,
-  onClose,
-  onSuccess,
-}) {
+export default function AddSubCategory({ categoryId, onClose, onSuccess }){
   const [form, setForm] = useState({ name: "", description: "" });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -20,14 +16,14 @@ export default function AddSubCategory({
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if(!file) return;
 
-    if (!file.type.startsWith("image/")) {
+    if(!file.type.startsWith("image/")){
       toast.error("Only image files are allowed");
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    if(file.size > 5 * 1024 * 1024){
       toast.error("Image must be less than 5MB");
       return;
     }
@@ -38,45 +34,47 @@ export default function AddSubCategory({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return;
+    if(loading) return;
 
-    if (!form.name.trim()) {
+    if(!form.name.trim()){
       return toast.error("Subcategory name is required");
     }
 
-    try {
+    try{
       setLoading(true);
 
       const data = new FormData();
       data.append("name", form.name.trim());
       data.append("category", categoryId);
-      if (form.description.trim()) data.append("description", form.description.trim());
-      if (image) data.append("image", image);
+      if(form.description.trim())
+        data.append("description", form.description.trim());
+      if(image) data.append("image", image);
 
       await api.post("/subcategories", data);
 
       toast.success("Subcategory added successfully");
       onSuccess();
-    } catch (err) {
+    } 
+    catch(err){
       toast.error(err.response?.data?.message || "Failed to add subcategory");
-    } finally {
+    } 
+    finally{
       setLoading(false);
     }
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center 
-      bg-black/50 backdrop-blur-sm px-4"
-      role="dialog"
-      aria-modal="true"
+      className="fixed inset-0 z-50 flex items-center justify-center
+      bg-black/50 backdrop-blur-sm px-4 overflow-hidden"
+      role="dialog" aria-modal="true"
     >
       <div
-        className="w-full max-w-md rounded-2xl bg-white shadow-2xl 
-        animate-[fadeIn_0.2s_ease-out]"
+        className="w-full max-w-md max-h-[90vh]
+          bg-white rounded-2xl shadow-2xl flex flex-col animate-[fadeIn_0.2s_ease-out]"
       >
-        {/* HEADER */}
-        <div className="border-b px-6 py-4 text-center">
+        {/* Header */}
+        <div className="border-b px-6 py-4 text-center shrink-0">
           <h2 className="text-xl font-semibold text-gray-800">
             Add Subcategory
           </h2>
@@ -85,57 +83,46 @@ export default function AddSubCategory({
           </p>
         </div>
 
-        {/* BODY */}
-        <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
-          {/* NAME */}
+        {/* Body */}
+        <form onSubmit={handleSubmit}
+          className="px-6 py-6 space-y-5 overflow-y-auto flex-1"
+        >
+          {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Subcategory Name <span className="text-red-500">*</span>
             </label>
-            <input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="e.g. Smartphones"
-              autoFocus
+            <input name="name" value={form.name} onChange={handleChange}
+              placeholder="e.g. Smartphones" autoFocus
               className="w-full rounded-lg border border-gray-300 px-3 py-2
-              focus:outline-none focus:ring-2 focus:ring-blue-500
-              transition"
+              focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
-          {/* DESCRIPTION */}
+          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Description
             </label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              rows={3}
+            <textarea name="description" value={form.description}
+              onChange={handleChange} rows={3}
               placeholder="Optional description"
               className="w-full rounded-lg border border-gray-300 px-3 py-2
-              resize-none focus:outline-none focus:ring-2 focus:ring-blue-500
-              transition"
+              resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
-          {/* IMAGE UPLOAD */}
+          {/* Image Upload */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Subcategory Image
             </label>
 
             <div
-              className="relative rounded-xl border-2 border-dashed border-gray-300 
-              p-4 hover:border-blue-500 transition cursor-pointer
-              bg-gray-50"
+              className="relative rounded-xl border-2 border-dashed border-gray-300
+              p-4 hover:border-blue-500 transition cursor-pointer bg-gray-50"
             >
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
+              <input ref={fileRef} type="file" accept="image/*"
                 onChange={handleImageChange}
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
@@ -143,12 +130,8 @@ export default function AddSubCategory({
               {!preview ? (
                 <div className="flex flex-col items-center gap-2 text-gray-500">
                   <ImagePlus size={28} />
-                  <p className="text-sm font-medium">
-                    Click to upload image
-                  </p>
-                  <p className="text-xs">
-                    PNG or JPG • Max 5MB
-                  </p>
+                  <p className="text-sm font-medium">Click to upload image</p>
+                  <p className="text-xs">PNG or JPG • Max 5MB</p>
                 </div>
               ) : (
                 <div className="flex items-center gap-4">
@@ -169,37 +152,32 @@ export default function AddSubCategory({
               )}
             </div>
           </div>
-
-          {/* FOOTER */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-gray-200 
-              hover:bg-gray-300 text-sm transition"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-2 rounded-lg bg-blue-600 
-              text-white hover:bg-blue-700 text-sm 
-              disabled:opacity-60 flex items-center gap-2 transition"
-            >
-              {loading && (
-                <span
-                  className="h-4 w-4 border-2 border-white 
-                  border-t-transparent rounded-full animate-spin"
-                />
-              )}
-              {loading ? "Saving..." : "Add Subcategory"}
-            </button>
-          </div>
         </form>
+
+        {/* Footer*/}
+        <div className="flex justify-end gap-3 px-6 py-4 border-t shrink-0">
+          <button type="button" onClick={onClose}
+            className="px-4 py-2 rounded-lg bg-gray-200
+            hover:bg-gray-300 text-sm transition"
+          >
+            Cancel
+          </button>
+
+          <button type="submit" disabled={loading} onClick={handleSubmit}
+            className="px-6 py-2 rounded-lg bg-blue-600 text-white
+            hover:bg-blue-700 text-sm disabled:opacity-60 flex items-center gap-2 transition"
+          >
+            {loading && (
+              <span className="h-4 w-4 border-2 border-white
+              border-t-transparent rounded-full animate-spin" />
+            )}
+            {loading ? "Saving..." : "Add Subcategory"}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
+
+
 
