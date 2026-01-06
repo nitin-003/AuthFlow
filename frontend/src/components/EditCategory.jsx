@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "../api/axios";
+import { X } from "lucide-react";
 
 export default function EditCategory({ id, onClose, onSuccess }) {
   const [form, setForm] = useState({ name: "", description: "" });
@@ -10,12 +11,8 @@ export default function EditCategory({ id, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const fileRef = useRef(null);
 
-  useEffect(() => {
-    if(id) fetchCategory();
-  }, [id]);
-
-  const fetchCategory = async () => {
-    try{
+  const fetchCategory = useCallback(async () => {
+    try {
       const res = await api.get(`/categories/${id}`);
       setForm({
         name: res.data.name || "",
@@ -24,11 +21,14 @@ export default function EditCategory({ id, onClose, onSuccess }) {
 
       setPreview(`http://localhost:5000/categories/image/${id}`);
       setIsNewImage(false);
-    } 
-    catch{
+    } catch {
       toast.error("Failed to load category");
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if(id) fetchCategory();
+  }, [id, fetchCategory]);
 
   const handleChange = (e) => {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -61,13 +61,14 @@ export default function EditCategory({ id, onClose, onSuccess }) {
       return toast.error("Category name is required");
     }
 
-    try{
+    try {
       setLoading(true);
 
       const data = new FormData();
       data.append("name", form.name.trim());
       if(form.description.trim())
         data.append("description", form.description.trim());
+
       if(image) data.append("image", image);
 
       await api.patch(`/categories/${id}`, data);
@@ -81,10 +82,10 @@ export default function EditCategory({ id, onClose, onSuccess }) {
 
       toast.success("Category updated successfully");
       onSuccess();
-    } 
+    }
     catch{
       toast.error("Update failed");
-    } 
+    }
     finally{
       setLoading(false);
     }
@@ -97,13 +98,22 @@ export default function EditCategory({ id, onClose, onSuccess }) {
           flex flex-col animate-[fadeIn_0.2s_ease-out]"
       >
         {/* Header */}
-        <div className="border-b px-6 py-4 text-center shrink-0">
-          <h2 className="text-xl font-semibold text-gray-800">
+        <div className="relative border-b px-6 py-4 text-center shrink-0">
+          <h2 className="text-xl font-bold text-gray-800">
             Edit Category
           </h2>
           <p className="text-sm text-gray-500 mt-1">
             Update category details
           </p>
+
+          {/* Close (X) Button */}
+          <button type="button" onClick={onClose} aria-label="Close modal"
+            className="absolute right-4 top-4 rounded-full p-1.5
+              text-gray-500 hover:bg-gray-100 hover:text-gray-700
+              transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Form */}
@@ -112,10 +122,10 @@ export default function EditCategory({ id, onClose, onSuccess }) {
         >
           {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Category Name <span className="text-red-500">*</span>
             </label>
-            <input name="name" placeholder="Enter Category Name"
+            <input name="name" placeholder="Enter category name"
               value={form.name} onChange={handleChange}
               className="w-full rounded-lg border border-gray-300 px-3 py-2
               focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -124,10 +134,10 @@ export default function EditCategory({ id, onClose, onSuccess }) {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Description
             </label>
-            <textarea name="description" placeholder="Enter Description"
+            <textarea name="description" placeholder="Enter description"
               value={form.description} onChange={handleChange} rows={3}
               className="w-full rounded-lg border border-gray-300 px-3 py-2
               resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -136,7 +146,7 @@ export default function EditCategory({ id, onClose, onSuccess }) {
 
           {/* Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Category Image
             </label>
 
@@ -144,7 +154,7 @@ export default function EditCategory({ id, onClose, onSuccess }) {
               className="flex items-center gap-4 rounded-xl border-2 border-dashed
               border-gray-300 p-4 cursor-pointer hover:border-blue-500 transition"
             >
-              <input d="image-upload" ref={fileRef} type="file"
+              <input id="image-upload" ref={fileRef} type="file"
                 accept="image/*" onChange={handleImageChange} className="hidden"
               />
 
@@ -164,7 +174,7 @@ export default function EditCategory({ id, onClose, onSuccess }) {
                 <p className="font-medium text-gray-700">
                   {isNewImage ? "New image selected" : "Click to change image"}
                 </p>
-                <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                <p className="text-xs text-gray-500">PNG or JPG (max 5MB)</p>
               </div>
             </label>
           </div>
@@ -193,5 +203,4 @@ export default function EditCategory({ id, onClose, onSuccess }) {
     </div>
   );
 }
-
 

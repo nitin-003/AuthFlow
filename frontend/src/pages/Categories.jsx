@@ -14,7 +14,7 @@ function Category(){
   const [error, setError] = useState("");
 
   const fetchCategories = useCallback(async () => {
-    try {
+    try{
       setLoading(true);
       setError("");
       const res = await api.get("/categories");
@@ -66,9 +66,7 @@ function Category(){
       )}
 
       {/* Table */}
-      <CategoryTable
-        categories={categories}
-        loading={loading}
+      <CategoryTable categories={categories} loading={loading}
         refreshCategories={fetchCategories}
       />
 

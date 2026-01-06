@@ -3,8 +3,9 @@ import api from "../api/axios";
 import { toast } from "react-toastify";
 
 export default function EditProductModal({ product, onClose, refresh }){
-  const [form, setForm] = useState({ name: "", sku: "",
-    price: "", unit: "pcs", category: "", minStockLevel: "" });
+  const [form, setForm] = useState({ name: "",
+    sku: "", price: "", unit: "pcs", category: "", minStockLevel: ""
+  });
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -61,10 +62,10 @@ export default function EditProductModal({ product, onClose, refresh }){
       toast.success("Product updated successfully");
       refresh();
       onClose();
-    } 
+    }
     catch(err){
       toast.error(err.response?.data?.message || "Update failed");
-    } 
+    }
     finally{
       setLoading(false);
     }
@@ -79,12 +80,13 @@ export default function EditProductModal({ product, onClose, refresh }){
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-3">
       <div
         className="bg-white w-full max-w-lg rounded-2xl shadow-2xl
-          max-h-[90vh] flex flex-col overflow-hidden"
+        max-h-[90vh] flex flex-col overflow-hidden"
       >
         {/* Header */}
         <div className="px-4 sm:px-6 py-4 border-b flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-800">Edit Product</h2>
-          <button onClick={onClose}
+          <button
+            onClick={onClose}
             className="text-gray-400 hover:text-gray-700 text-lg"
           >
             ✕
@@ -93,7 +95,16 @@ export default function EditProductModal({ product, onClose, refresh }){
 
         {/* Body */}
         <div className="px-4 sm:px-6 py-5 overflow-y-auto flex-1 space-y-6">
-          {/* Image */}
+
+          {/* Product Name FIRST */}
+          <div>
+            <label className={label}>Product Name *</label>
+            <input name="name" placeholder="Enter Product Name"
+              value={form.name} onChange={handleChange} className={input}
+            />
+          </div>
+
+          {/* Product Image */}
           <div className="space-y-2">
             <label className={label}>Product Image</label>
             <div className="flex items-center gap-4">
@@ -118,15 +129,7 @@ export default function EditProductModal({ product, onClose, refresh }){
             </div>
           </div>
 
-          {/* Form */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="sm:col-span-2">
-              <label className={label}>Product Name *</label>
-              <input name="name" placeholder="Enter Product Name"
-                value={form.name} onChange={handleChange} className={input}
-              />
-            </div>
-
             <div>
               <label className={label}>SKU *</label>
               <input name="sku" placeholder="Enter SKU"
@@ -136,9 +139,8 @@ export default function EditProductModal({ product, onClose, refresh }){
 
             <div>
               <label className={label}>Price</label>
-              <input type="number" min="0" name="price"
-                placeholder="Enter Price" value={form.price}
-                onChange={handleChange} className={input}
+              <input type="number" min="0" name="price" placeholder="Enter Price"
+                value={form.price} onChange={handleChange} className={input}
               />
             </div>
 
@@ -156,8 +158,9 @@ export default function EditProductModal({ product, onClose, refresh }){
 
             <div>
               <label className={label}>Min Stock</label>
-              <input type="number" min="0" placeholder="0" name="minStockLevel"
-                value={form.minStockLevel} onChange={handleChange} className={input}
+              <input type="number" min="0" placeholder="0"
+                name="minStockLevel" value={form.minStockLevel}
+                onChange={handleChange} className={input}
               />
             </div>
 
@@ -170,17 +173,17 @@ export default function EditProductModal({ product, onClose, refresh }){
           </div>
         </div>
 
-        {/* FOOTER */}
+        {/* Footer */}
         <div className="px-4 sm:px-6 py-4 border-t bg-gray-50 flex justify-end gap-3">
-          <button
-            onClick={onClose}
+          <button onClick={onClose}
             className="px-5 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition"
           >
             Cancel
           </button>
 
           <button onClick={handleSubmit} disabled={loading}
-            className="px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60 transition"
+            className="px-5 py-2 rounded-xl bg-indigo-600 text-white
+            hover:bg-indigo-700 disabled:opacity-60 transition"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>
@@ -189,5 +192,4 @@ export default function EditProductModal({ product, onClose, refresh }){
     </div>
   );
 }
-
 

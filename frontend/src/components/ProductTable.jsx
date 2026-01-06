@@ -131,9 +131,7 @@ export default function ProductTable({ products = [], fetchProducts, loading }) 
                 <td className="p-4 text-center">
                   <div className="w-12 h-12 mx-auto rounded-lg border overflow-hidden">
                     {p.image ? (
-                      <img
-                        src={p.image}
-                        alt={p.name}
+                      <img src={p.image} alt={p.name}
                         className="w-full h-full object-cover"
                       />
                     ) : (

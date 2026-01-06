@@ -13,8 +13,7 @@ exports.createSubCategory = async (req, res) => {
     }
 
     // Check parent category exists & is active
-    const parentCategory = await Category.findOne({ _id: category, isActive: true,
-    });
+    const parentCategory = await Category.findOne({ _id: category });
 
     if(!parentCategory){
       return res.status(404).json({
@@ -142,6 +141,4 @@ exports.deleteSubCategory = async (req, res) => {
     res.status(500).json({ message: "Failed to delete subcategory" });
   }
 };
-
-
 

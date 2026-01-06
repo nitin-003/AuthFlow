@@ -33,8 +33,7 @@ function UserManagement(){
 
         {/* Header */}
         <div className="relative px-6 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-          <button
-            onClick={() => navigate(-1)}
+          <button onClick={() => navigate(-1)}
             className="absolute left-6 text-sm font-medium opacity-90 hover:opacity-100"
           >
             ← Back

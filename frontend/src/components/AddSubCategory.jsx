@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import api from "../api/axios";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, X } from "lucide-react";
 
-export default function AddSubCategory({ categoryId, onClose, onSuccess }){
+export default function AddSubCategory({ categoryId, onClose, onSuccess }) {
   const [form, setForm] = useState({ name: "", description: "" });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -46,18 +46,20 @@ export default function AddSubCategory({ categoryId, onClose, onSuccess }){
       const data = new FormData();
       data.append("name", form.name.trim());
       data.append("category", categoryId);
+
       if(form.description.trim())
         data.append("description", form.description.trim());
+
       if(image) data.append("image", image);
 
       await api.post("/subcategories", data);
 
       toast.success("Subcategory added successfully");
       onSuccess();
-    } 
+    }
     catch(err){
       toast.error(err.response?.data?.message || "Failed to add subcategory");
-    } 
+    }
     finally{
       setLoading(false);
     }
@@ -74,13 +76,25 @@ export default function AddSubCategory({ categoryId, onClose, onSuccess }){
           bg-white rounded-2xl shadow-2xl flex flex-col animate-[fadeIn_0.2s_ease-out]"
       >
         {/* Header */}
-        <div className="border-b px-6 py-4 text-center shrink-0">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Add Subcategory
+        <div className="relative border-b px-6 py-4 text-center shrink-0">
+          <h2 className="text-xl font-bold text-gray-800">
+            Add SubCategory
           </h2>
           <p className="text-sm text-gray-500 mt-1">
             Create a subcategory inside this category
           </p>
+
+          {/* Close (X) Button */}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close modal"
+            className="absolute right-4 top-4 rounded-full p-1.5
+              text-gray-500 hover:bg-gray-100 hover:text-gray-700
+              transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Body */}
@@ -90,7 +104,7 @@ export default function AddSubCategory({ categoryId, onClose, onSuccess }){
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Subcategory Name <span className="text-red-500">*</span>
+              SubCategory Name <span className="text-red-500">*</span>
             </label>
             <input name="name" value={form.name} onChange={handleChange}
               placeholder="e.g. Smartphones" autoFocus
@@ -105,8 +119,7 @@ export default function AddSubCategory({ categoryId, onClose, onSuccess }){
               Description
             </label>
             <textarea name="description" value={form.description}
-              onChange={handleChange} rows={3}
-              placeholder="Optional description"
+              onChange={handleChange} rows={3} placeholder="Enter description"
               className="w-full rounded-lg border border-gray-300 px-3 py-2
               resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
@@ -115,7 +128,7 @@ export default function AddSubCategory({ categoryId, onClose, onSuccess }){
           {/* Image Upload */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Subcategory Image
+              SubCategory Image
             </label>
 
             <div
@@ -131,14 +144,12 @@ export default function AddSubCategory({ categoryId, onClose, onSuccess }){
                 <div className="flex flex-col items-center gap-2 text-gray-500">
                   <ImagePlus size={28} />
                   <p className="text-sm font-medium">Click to upload image</p>
-                  <p className="text-xs">PNG or JPG • Max 5MB</p>
+                  <p className="text-xs">PNG or JPG (max 5MB)</p>
                 </div>
               ) : (
                 <div className="flex items-center gap-4">
                   <div className="h-20 w-20 rounded-lg border bg-white overflow-hidden">
-                    <img
-                      src={preview}
-                      alt="Preview"
+                    <img src={preview} alt="Preview"
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -178,6 +189,5 @@ export default function AddSubCategory({ categoryId, onClose, onSuccess }){
     </div>
   );
 }
-
 
 

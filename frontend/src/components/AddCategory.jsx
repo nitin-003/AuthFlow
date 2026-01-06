@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
 import { toast } from "react-toastify";
 import api from "../api/axios";
+import { X } from "lucide-react";
 
-export default function AddCategory({ onClose, onSuccess }){
+export default function AddCategory({ onClose, onSuccess }) {
   const [form, setForm] = useState({ name: "", description: "" });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -44,8 +45,10 @@ export default function AddCategory({ onClose, onSuccess }){
 
       const data = new FormData();
       data.append("name", form.name.trim());
+
       if(form.description.trim())
         data.append("description", form.description.trim());
+
       if(image) data.append("image", image);
 
       await api.post("/categories", data);
@@ -55,33 +58,42 @@ export default function AddCategory({ onClose, onSuccess }){
       setForm({ name: "", description: "" });
       setImage(null);
       setPreview(null);
-      if(fileRef.current) fileRef.current.value = "";
 
+      if(fileRef.current) fileRef.current.value = "";
       onSuccess();
-    } 
-    catch(err) {
+    }
+    catch(err){
       toast.error(err.response?.data?.message || "Failed to add category");
-    } finally {
+    }
+    finally{
       setLoading(false);
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4 overflow-hidden">
-      <div
-        className="w-full max-w-md max-h-[90vh]
-          bg-white rounded-2xl shadow-2xl flex flex-col
-          animate-[fadeIn_0.2s_ease-out]"
+      <div className="w-full max-w-md max-h-[90vh] bg-white rounded-2xl 
+        shadow-2xl flex flex-col animate-[fadeIn_0.2s_ease-out]"
       >
         {/* Header */}
-        <div className="border-b px-6 py-4 text-center shrink-0">
-          <h2 className="text-xl font-semibold text-gray-800">
+        <div className="relative border-b px-6 py-4 text-center shrink-0">
+          <h2 className="text-xl font-bold text-gray-800">
             Add New Category
           </h2>
           <p className="text-sm text-gray-500 mt-1">
             Organize products using categories
           </p>
+
+          {/* Close Button */}
+          <button type="button" onClick={onClose} aria-label="Close modal"
+            className="absolute right-4 top-4 rounded-full p-1.5
+              text-gray-500 hover:bg-gray-100 hover:text-gray-700
+              transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <X size={18} />
+          </button>
         </div>
+
 
         {/* Form */}
         <form onSubmit={handleSubmit}
@@ -104,7 +116,7 @@ export default function AddCategory({ onClose, onSuccess }){
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Description
             </label>
-            <textarea name="description" placeholder="Optional description"
+            <textarea name="description" placeholder="Enter description"
               value={form.description} onChange={handleChange} rows={3}
               className="w-full rounded-lg border border-gray-300 px-3 py-2
               resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -122,7 +134,7 @@ export default function AddCategory({ onClose, onSuccess }){
               border-gray-300 p-4 cursor-pointer hover:border-blue-500 transition"
             >
               <input id="image-upload" ref={fileRef}
-                type="file" accept="image/*" 
+                type="file" accept="image/*"
                 onChange={handleImageChange} className="hidden"
               />
 
@@ -138,9 +150,9 @@ export default function AddCategory({ onClose, onSuccess }){
 
               <div className="text-sm text-gray-600">
                 <p className="font-medium text-gray-700">
-                  {preview ? "Change image" : "Upload an image"}
+                  {preview ? "Change image" : "Click to upload image"}
                 </p>
-                <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                <p className="text-xs text-gray-500">PNG or JPG (max 5MB)</p>
               </div>
             </label>
           </div>
@@ -168,6 +180,5 @@ export default function AddCategory({ onClose, onSuccess }){
     </div>
   );
 }
-
 
 

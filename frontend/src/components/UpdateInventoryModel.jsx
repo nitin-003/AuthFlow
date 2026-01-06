@@ -37,10 +37,7 @@ export default function UpdateInventoryModal({ product, onClose, refresh }) {
   return createPortal(
     <>
       {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black/40 z-40"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose}/>
 
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -50,9 +47,7 @@ export default function UpdateInventoryModal({ product, onClose, refresh }) {
           <h3 className="text-lg font-semibold text-gray-800 mb-1">
             Update Inventory
           </h3>
-          <p className="text-sm text-gray-500 mb-6">
-            {product.name}
-          </p>
+          <p className="text-sm text-gray-500 mb-6">{product.name}</p>
 
           {/* Quantity */}
           <div className="mb-4">
@@ -74,10 +69,8 @@ export default function UpdateInventoryModal({ product, onClose, refresh }) {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Reason
             </label>
-            <input
-              type="text"
-              placeholder="Sale, purchase, damage, adjustment..."
-              value={reason}
+            <input type="text"
+              placeholder="Sale, purchase, damage, adjustment..." value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg
               focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -86,17 +79,13 @@ export default function UpdateInventoryModal({ product, onClose, refresh }) {
 
           {/* Actions */}
           <div className="flex justify-end gap-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg text-sm
+            <button onClick={onClose} className="px-4 py-2 rounded-lg text-sm
               text-gray-600 hover:bg-gray-100 transition"
             >
               Cancel
             </button>
 
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
+            <button onClick={handleSubmit} disabled={loading}
               className={`px-5 py-2 rounded-lg text-sm font-medium text-white
               transition ${
                 loading
@@ -113,4 +102,5 @@ export default function UpdateInventoryModal({ product, onClose, refresh }) {
     document.body
   );
 }
+
 

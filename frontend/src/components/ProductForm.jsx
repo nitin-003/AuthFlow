@@ -172,7 +172,7 @@ export default function ProductForm({ fetchProducts, onClose }) {
         </div>
       </div>
 
-      {/* FOOTER */}
+      {/* Footer */}
       <div className="px-4 sm:px-6 py-4 bg-gray-50 border-t flex justify-end gap-3">
         <button type="button" onClick={onClose}
           className="px-4 py-2 rounded-xl text-sm bg-gray-200 hover:bg-gray-300 transition"
