@@ -9,7 +9,7 @@ connectDB();
 
 const app = express();
 
-/* CORS */
+/* cors */
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:3000",
@@ -19,12 +19,12 @@ app.use(
   })
 );
 
-/* MIDDLEWARE  */
+/* Middleware  */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-/* ROUTES */
+/* Routes */
 app.use("/auth", require("./routes/authRoute"));
 app.use("/user", require("./routes/userRoute"));
 app.use("/products", require("./routes/productRoute"));
@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
   res.send("API is running");
 });
 
-/* GLOBAL ERROR HANDLER  */
+/* Global Error Handler  */
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ message: "Internal Server Error" });
