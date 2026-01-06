@@ -8,13 +8,11 @@ const inventoryLogSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-
     productName: {
       type: String,
       required: true,
       trim: true,
     },
-
     sku: {
       type: String,
       required: true,
@@ -22,31 +20,26 @@ const inventoryLogSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
-
     unit: {
       type: String,
       enum: ["pcs", "kg", "litre", "box"],
       required: true,
     },
-
     type: {
       type: String,
       enum: ["IN", "OUT"],
       required: true,
     },
-
     quantity: {
       type: Number,
       required: true,
       min: 1,
     },
-
     reason: {
       type: String,
       required: true,
       trim: true,
     },
-
     performedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -58,6 +51,5 @@ const inventoryLogSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("InventoryLog", inventoryLogSchema);
-
 
 

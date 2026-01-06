@@ -1,68 +1,130 @@
 const SubCategory = require("../models/subcategory");
 const Category = require("../models/category");
 
-/* Create Subcategory  */
+/* CREATE SUBCATEGORY  */
 exports.createSubCategory = async (req, res) => {
   try{
-    const { name, description, category } = req.body;
+    const { name, description = "", category } = req.body;
 
     if(!name || !category){
-      return res.status(400).json({ message: "Subcategory name and category are required" });
+      return res.status(400).json({
+        message: "Subcategory name and category are required",
+      });
     }
 
-    // Check parent category exists & active
-    const parentCategory = await Category.findOne({ _id: category, isActive: true });
-
-    if(!parentCategory){
-      return res.status(404).json({ message: "Parent category not found" });
-    }
-
-    const subCategory = await SubCategory.create({ name,
-      description, category, image: req.file?.path || null,
+    // Check parent category exists & is active
+    const parentCategory = await Category.findOne({ _id: category, isActive: true,
     });
 
-    res.status(201).json(subCategory);
-  } 
-  catch(err){
-    // Duplicate subcategory under same category
-    if(err.code === 11000){
-      return res.status(400).json({ message: "Subcategory already exists in this category" });
+    if (!parentCategory) {
+      return res.status(404).json({
+        message: "Parent category not found",
+      });
     }
 
-    res.status(500).json({ message: "Failed to create subcategory" });
+    const subCategoryData = {
+      name: name.trim(),
+      description: description.trim(),
+      category,
+    };
+
+    if (req.file) {
+      subCategoryData.image = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+    }
+
+    const subCategory = await SubCategory.create(subCategoryData);
+
+    res.status(201).json(subCategory);
+  } catch (err) {
+    // Duplicate subcategory under same category
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: "Subcategory already exists in this category",
+      });
+    }
+
+    console.error(err);
+    res.status(500).json({
+      message: "Failed to create subcategory",
+    });
   }
 };
 
-/* Get Subcategories */
+/* ================= GET SUBCATEGORIES ================= */
 exports.getSubCategories = async (req, res) => {
-  try{
+  try {
     const { categoryId } = req.query;
 
-    const filter = { isActive: true,
+    const filter = {
       ...(categoryId && { category: categoryId }),
     };
 
     const subCategories = await SubCategory.find(filter)
-      .populate("category", "name").sort({ createdAt: -1 });
+      .select("-image.data") // do NOT send buffer
+      .populate("category", "name")
+      .sort({ createdAt: -1 });
 
     res.status(200).json(subCategories);
-  } 
-  catch(err){
+  } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to fetch subcategories" });
+    res.status(500).json({
+      message: "Failed to fetch subcategories",
+    });
   }
 };
 
-/* UPDATE SUBCATEGORY */
+/* ================= GET SUBCATEGORY IMAGE ================= */
+exports.getSubCategoryImage = async (req, res) => {
+  try {
+    const subCategory = await SubCategory.findById(req.params.id);
+
+    if (!subCategory || !subCategory.image?.data) {
+      return res.status(404).send("Image not found");
+    }
+
+    res.set("Content-Type", subCategory.image.contentType);
+    res.send(subCategory.image.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to load image");
+  }
+};
+
+/* ================= UPDATE SUBCATEGORY ================= */
 exports.updateSubCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    const updateData = {};
+
+    if (req.body.name) {
+      updateData.name = req.body.name.trim();
+    }
+
+    if (req.body.description !== undefined) {
+      updateData.description = req.body.description.trim();
+    }
+
+    if (req.file) {
+      updateData.image = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+    }
+
+    if (!Object.keys(updateData).length) {
+      return res.status(400).json({
+        message: "Nothing to update",
+      });
+    }
 
     const updatedSubCategory = await SubCategory.findByIdAndUpdate(
       id,
-      { ...req.body },
+      updateData,
       { new: true, runValidators: true }
-    );
+    ).select("-image.data");
 
     if (!updatedSubCategory) {
       return res.status(404).json({
@@ -79,16 +141,12 @@ exports.updateSubCategory = async (req, res) => {
   }
 };
 
-/* ================= DELETE SUBCATEGORY (SOFT DELETE) ================= */
+/* ================= DELETE SUBCATEGORY (HARD DELETE) ================= */
 exports.deleteSubCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedSubCategory = await SubCategory.findByIdAndUpdate(
-      id,
-      { isActive: false },
-      { new: true }
-    );
+    const deletedSubCategory = await SubCategory.findByIdAndDelete(id);
 
     if (!deletedSubCategory) {
       return res.status(404).json({
@@ -97,7 +155,7 @@ exports.deleteSubCategory = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Subcategory deleted successfully",
+      message: "Subcategory deleted permanently",
     });
   } catch (err) {
     console.error(err);
