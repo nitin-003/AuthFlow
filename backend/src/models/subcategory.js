@@ -1,30 +1,25 @@
 const mongoose = require("mongoose");
 
-const subCategorySchema = new mongoose.Schema({
+const subCategorySchema = new mongoose.Schema(
+  {
     name: {
       type: String,
       required: true,
       trim: true,
     },
-
     description: {
       type: String,
       trim: true,
+      default: "",
     },
-
     image: {
-      type: String,
+      data: Buffer,
+      contentType: String,
     },
-
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
-    },
-
-    isActive: {
-      type: Boolean,
-      default: true,
     },
   },
   { timestamps: true }
@@ -34,4 +29,5 @@ const subCategorySchema = new mongoose.Schema({
 subCategorySchema.index({ name: 1, category: 1 }, { unique: true });
 
 module.exports = mongoose.model("SubCategory", subCategorySchema);
+
 

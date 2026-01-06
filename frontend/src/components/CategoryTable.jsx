@@ -1,6 +1,8 @@
 import { useState, Fragment } from "react";
 import api from "../api/axios";
 import EditCategory from "./EditCategory";
+import SubCategoryList from "./SubCategoryList";
+import AddSubCategory from "./AddSubCategory";
 
 export default function CategoryTable({
   categories = [],
@@ -9,6 +11,8 @@ export default function CategoryTable({
 }) {
   const [openCategoryId, setOpenCategoryId] = useState(null);
   const [editCategoryId, setEditCategoryId] = useState(null);
+  const [openAddSubCategoryId, setOpenAddSubCategoryId] = useState(null);
+  const [refreshSubKey, setRefreshSubKey] = useState(0); // 🔑 KEY FIX
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this category?")) return;
@@ -16,8 +20,7 @@ export default function CategoryTable({
     try {
       await api.delete(`/categories/${id}`);
       refreshCategories();
-    } catch (err) {
-      console.error("Delete failed", err);
+    } catch {
       alert("Failed to delete category");
     }
   };
@@ -34,11 +37,11 @@ export default function CategoryTable({
     <>
       <div className="overflow-x-auto bg-white rounded-2xl shadow border">
         <table className="w-full text-sm text-gray-700">
-          {/* TABLE HEADER */}
+          {/* HEADER */}
           <thead className="bg-gray-100 text-gray-600 text-xs uppercase">
             <tr>
               <th className="px-4 py-3 text-left">Image</th>
-              <th className="px-4 py-3 text-left">Category Name</th>
+              <th className="px-4 py-3 text-left">Category</th>
               <th className="px-4 py-3 text-left">Description</th>
               <th className="px-4 py-3 text-center">Subcategories</th>
               <th className="px-4 py-3 text-center">Add</th>
@@ -47,7 +50,6 @@ export default function CategoryTable({
           </thead>
 
           <tbody>
-            {/* EMPTY STATE */}
             {categories.length === 0 && (
               <tr>
                 <td colSpan="6" className="p-6 text-center text-gray-400">
@@ -56,19 +58,17 @@ export default function CategoryTable({
               </tr>
             )}
 
-            {/* CATEGORY ROWS */}
             {categories.map((cat) => (
               <Fragment key={cat._id}>
                 <tr className="border-t hover:bg-gray-50 transition">
                   {/* IMAGE */}
                   <td className="px-4 py-3">
                     <img
-                      src={`${import.meta.env.VITE_API_URL}/categories/image/${cat._id}`}
+                      src={`http://localhost:5000/categories/image/${cat._id}`}
                       alt={cat.name}
                       className="w-12 h-12 rounded-lg object-contain bg-gray-100 p-1"
                       onError={(e) => {
-                        e.target.src = "";
-                        e.target.alt = "No image";
+                        e.currentTarget.src = "/placeholder.png";
                       }}
                     />
                   </td>
@@ -83,7 +83,7 @@ export default function CategoryTable({
                     {cat.description || "—"}
                   </td>
 
-                  {/* VIEW SUBCATEGORY */}
+                  {/* VIEW */}
                   <td className="px-4 py-3 text-center">
                     <button
                       onClick={() =>
@@ -100,8 +100,12 @@ export default function CategoryTable({
                   {/* ADD SUBCATEGORY */}
                   <td className="px-4 py-3 text-center">
                     <button
-                      onClick={() => alert("Subcategory modal here")}
-                      className="bg-green-600 text-white px-3 py-1 rounded-md text-xs hover:bg-green-700"
+                      onClick={() => {
+                        setOpenAddSubCategoryId(cat._id);
+                        setOpenCategoryId(cat._id); // auto open dropdown
+                      }}
+                      className="bg-green-600 text-white px-3 py-1 
+                      rounded-md text-xs hover:bg-green-700"
                     >
                       + Add
                     </button>
@@ -127,12 +131,20 @@ export default function CategoryTable({
                   </td>
                 </tr>
 
-                {/* SUBCATEGORY SECTION */}
+                {/* 🔽 SUBCATEGORY DROPDOWN */}
                 {openCategoryId === cat._id && (
-                  <tr className="bg-gray-50">
+                  <tr className="bg-gray-50 animate-[fadeIn_0.15s_ease-out]">
                     <td colSpan="6" className="px-6 py-4">
-                      <div className="border-l-4 border-blue-500 pl-4 text-gray-500 text-sm">
-                        Subcategories will be loaded here
+                      <div className="rounded-xl border border-blue-100 
+                        bg-blue-50/50 p-4 shadow-inner">
+                        <h4 className="mb-3 text-sm font-semibold text-blue-700">
+                          Subcategories
+                        </h4>
+
+                        <SubCategoryList
+                          key={refreshSubKey}
+                          categoryId={cat._id}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -143,7 +155,7 @@ export default function CategoryTable({
         </table>
       </div>
 
-      {/* EDIT CATEGORY MODAL */}
+      {/* EDIT CATEGORY */}
       {editCategoryId && (
         <EditCategory
           id={editCategoryId}
@@ -154,8 +166,19 @@ export default function CategoryTable({
           }}
         />
       )}
+
+      {/* ADD SUBCATEGORY */}
+      {openAddSubCategoryId && (
+        <AddSubCategory
+          categoryId={openAddSubCategoryId}
+          onClose={() => setOpenAddSubCategoryId(null)}
+          onSuccess={() => {
+            setOpenAddSubCategoryId(null);
+            setRefreshSubKey((k) => k + 1); 
+          }}
+        />
+      )}
     </>
   );
 }
-
 

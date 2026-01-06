@@ -15,8 +15,8 @@ const categorySchema = new mongoose.Schema(
       default: "",
     },
     image: {
-      data: Buffer,          // 👈 binary image data
-      contentType: String,   // 👈 image/png, image/jpeg
+      data: Buffer,          
+      contentType: String, 
     },
     isActive: {
       type: Boolean,

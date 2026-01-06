@@ -6,10 +6,10 @@ export default function EditCategory({ id, onClose, onSuccess }) {
   const [form, setForm] = useState({ name: "", description: "" });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [isNewImage, setIsNewImage] = useState(false);
   const [loading, setLoading] = useState(false);
   const fileRef = useRef(null);
 
-  /* ================= FETCH CATEGORY ================= */
   useEffect(() => {
     if (id) fetchCategory();
     // eslint-disable-next-line
@@ -23,17 +23,13 @@ export default function EditCategory({ id, onClose, onSuccess }) {
         description: res.data.description || "",
       });
 
-      // existing image preview (buffer-based image API)
-      setPreview(
-        `${import.meta.env.VITE_API_URL}/categories/image/${id}`
-      );
-    } catch (err) {
-      console.error("Failed to load category", err);
+      setPreview(`http://localhost:5000/categories/image/${id}`);
+      setIsNewImage(false);
+    } catch {
       toast.error("Failed to load category");
     }
   };
 
-  /* ================= HANDLERS ================= */
   const handleChange = (e) => {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
@@ -54,9 +50,9 @@ export default function EditCategory({ id, onClose, onSuccess }) {
 
     setImage(file);
     setPreview(URL.createObjectURL(file));
+    setIsNewImage(true);
   };
 
-  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
@@ -70,62 +66,59 @@ export default function EditCategory({ id, onClose, onSuccess }) {
 
       const data = new FormData();
       data.append("name", form.name.trim());
+      if (form.description.trim()) data.append("description", form.description.trim());
+      if (image) data.append("image", image);
 
-      if (form.description.trim()) {
-        data.append("description", form.description.trim());
-      }
-
-      if (image) {
-        data.append("image", image);
-      }
-
-      // ✅ PATCH (partial update)
       await api.patch(`/categories/${id}`, data);
 
-      toast.success("Category updated successfully");
-
+      setPreview(`http://localhost:5000/categories/image/${id}?t=${Date.now()}`);
+      setIsNewImage(false);
       setImage(null);
       if (fileRef.current) fileRef.current.value = "";
 
-      onSuccess();
-    } catch (err) {
-      console.error("Failed to update category", err);
-      toast.error(err.response?.data?.message || "Update failed");
+      toast.success("Category updated successfully");
+      setTimeout(() => onSuccess(), 0);
+    } catch {
+      toast.error("Update failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center 
-      bg-black/40 backdrop-blur-sm"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6">
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Edit Category
-        </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl animate-[fadeIn_0.2s_ease-out]">
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* HEADER */}
+        <div className="border-b px-6 py-4 text-center">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Edit Category
+          </h2>
+          <p className="text-sm text-gray-500 mt-1">
+            Update category details
+          </p>
+        </div>
+
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
+
           {/* NAME */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Category Name <span className="text-red-500">*</span>
             </label>
             <input
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full border rounded-lg p-2 
-              focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2
+              focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
           {/* DESCRIPTION */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Description
             </label>
             <textarea
@@ -133,42 +126,62 @@ export default function EditCategory({ id, onClose, onSuccess }) {
               value={form.description}
               onChange={handleChange}
               rows={3}
-              className="w-full border rounded-lg p-2 resize-none 
-              focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2
+              resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
-          {/* IMAGE */}
+          {/* IMAGE UPLOAD (MATCHED UI) */}
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Category Image
             </label>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="text-sm"
-            />
 
-            {preview && (
-              <img
-                src={preview}
-                alt="Preview"
-                className="mt-3 h-24 w-24 rounded-lg 
-                object-cover border"
-                onError={(e) => (e.target.style.display = "none")}
+            <label
+              htmlFor="image-upload"
+              className="group flex items-center gap-4 rounded-xl border-2 border-dashed
+              border-gray-300 p-4 cursor-pointer hover:border-blue-500 transition"
+            >
+              <input
+                id="image-upload"
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
               />
-            )}
+
+              <div className="relative h-20 w-20 rounded-lg overflow-hidden border">
+                <img
+                  src={preview || "/placeholder.png"}
+                  alt="Preview"
+                  className="h-full w-full object-cover"
+                />
+                <span
+                  className={`absolute bottom-0 w-full text-[10px] text-center py-0.5 text-white
+                  ${isNewImage ? "bg-green-600" : "bg-blue-600"}`}
+                >
+                  {isNewImage ? "New Image" : "Current Image"}
+                </span>
+              </div>
+
+              <div className="text-sm text-gray-600">
+                <p className="font-medium text-gray-700">
+                  {isNewImage ? "New image selected" : "Click to change image"}
+                </p>
+                <p className="text-xs text-gray-500">
+                  PNG, JPG up to 5MB
+                </p>
+              </div>
+            </label>
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex justify-end gap-3 pt-4">
+          {/* FOOTER */}
+          <div className="flex justify-end gap-3 pt-4 border-t">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg 
-              bg-gray-200 hover:bg-gray-300"
+              className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm transition"
             >
               Cancel
             </button>
@@ -176,11 +189,14 @@ export default function EditCategory({ id, onClose, onSuccess }) {
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-lg 
-              bg-blue-600 text-white hover:bg-blue-700 
-              disabled:opacity-60"
+              className="px-5 py-2 rounded-lg bg-blue-600 text-white
+              hover:bg-blue-700 text-sm disabled:opacity-60
+              flex items-center gap-2 transition"
             >
-              {loading ? "Updating..." : "Update"}
+              {loading && (
+                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              )}
+              {loading ? "Updating..." : "Update Category"}
             </button>
           </div>
         </form>

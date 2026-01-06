@@ -19,12 +19,12 @@ app.use(
   })
 );
 
-/* Middleware  */
+/* MIDDLEWARE  */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-/* Routes */
+/* ROUTES */
 app.use("/auth", require("./routes/authRoute"));
 app.use("/user", require("./routes/userRoute"));
 app.use("/products", require("./routes/productRoute"));
@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
   res.send("API is running");
 });
 
-/* Global Error Handler  */
+/* GLOBAL ERROR HANDLER  */
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ message: "Internal Server Error" });
@@ -45,5 +45,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
-
 
