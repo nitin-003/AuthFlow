@@ -1,4 +1,6 @@
+const category = require("../models/category");
 const Category = require("../models/category");
+const { find } = require("../models/user");
 
 /* Create Category */
 exports.createCategory = async (req, res) => {
@@ -21,8 +23,7 @@ exports.createCategory = async (req, res) => {
     const categoryData = { name: name.toLowerCase(), description };
 
     if(req.file){
-      categoryData.image = {
-        data: req.file.buffer,
+      categoryData.image = { data: req.file.buffer,
         contentType: req.file.mimetype,
       };
     }
@@ -35,7 +36,6 @@ exports.createCategory = async (req, res) => {
     });
   } 
   catch(err){
-    console.error(err);
     res.status(500).json({ message: "Failed to create category" });
   }
 };
@@ -49,7 +49,6 @@ exports.getCategories = async (req, res) => {
     res.status(200).json(categories);
   } 
   catch(err){
-    console.error(err);
     res.status(500).json({ message: "Failed to fetch categories" });
   }
 };
@@ -67,7 +66,6 @@ exports.getCategoryById = async (req, res) => {
     res.status(200).json(category);
   } 
   catch(err){
-    console.error(err);
     res.status(500).json({ message: "Failed to fetch category" });
   }
 };
@@ -85,7 +83,6 @@ exports.getCategoryImage = async (req, res) => {
     res.send(category.image.data);
   } 
   catch(err){
-    console.error(err);
     res.status(500).send("Failed to load image");
   }
 };
@@ -136,7 +133,6 @@ exports.updateCategory = async (req, res) => {
     res.status(200).json(category);
   } 
   catch(err){
-    console.error(err);
     res.status(500).json({ message: "Failed to update category" });
   }
 };
@@ -158,10 +154,21 @@ exports.deleteCategory = async (req, res) => {
     });
   } 
   catch(err){
-    console.error(err);
     res.status(500).json({ message: "Failed to delete category" });
   }
 };
 
+exports.checkCategory = async (req, res) => {
+  try{
+    const { q = "" } = req.query;
 
+    const categories = await Category.find({ name: {$regex: q, $options: "i"},
+    }).select("_id name").limit(10).sort({name: 1});
+
+    res.status(200).json(categories);
+  }
+  catch(err){
+    res.status(500).json({ message: "Failed to fetch categories"});
+  }
+}
 

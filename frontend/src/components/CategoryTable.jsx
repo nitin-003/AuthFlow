@@ -178,7 +178,7 @@ export default function CategoryTable({
           onClose={() => setOpenAddSubCategoryId(null)}
           onSuccess={() => {
             setOpenAddSubCategoryId(null);
-            setRefreshSubKey((k) => k + 1);
+            setRefreshSubKey((k) => k+1);
           }}
         />
       )}

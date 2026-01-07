@@ -21,10 +21,8 @@ exports.createSubCategory = async (req, res) => {
       });
     }
 
-    const subCategoryData = {
-      name: name.trim(),
-      description: description.trim(),
-      category,
+    const subCategoryData = { name: name.trim(), 
+      description: description.trim(), category, 
     };
 
     if(req.file){
@@ -119,7 +117,6 @@ exports.updateSubCategory = async (req, res) => {
     res.status(200).json(updatedSubCategory);
   } 
   catch(err){
-    console.error(err);
     res.status(500).json({ message: "Failed to update subcategory" });
   }
 };
