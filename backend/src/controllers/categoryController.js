@@ -158,17 +158,4 @@ exports.deleteCategory = async (req, res) => {
   }
 };
 
-exports.checkCategory = async (req, res) => {
-  try{
-    const { q = "" } = req.query;
-
-    const categories = await Category.find({ name: {$regex: q, $options: "i"},
-    }).select("_id name").limit(10).sort({name: 1});
-
-    res.status(200).json(categories);
-  }
-  catch(err){
-    res.status(500).json({ message: "Failed to fetch categories"});
-  }
-}
 

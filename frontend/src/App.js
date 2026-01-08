@@ -16,22 +16,22 @@ function App(){
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/login"/>}/>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/signup" element={<Signup/>}/>
 
-        <Route path="/home" element={<Home />} />
-        <Route path="/user" element={<User />} />
+        <Route path="/home" element={<Home/>}/>
+        <Route path="/user" element={<User/>}/>
 
-        <Route path="/users" element={<UserManagement />} />
-        <Route path="/products" element={<Products />} /> 
-        <Route path="/inventory-logs" element={<InventoryLogs />} />
-        <Route path="/categories" element={<Category />} /> 
-        <Route path="/categories/add" element={<AddCategory />} />
+        <Route path="/users" element={<UserManagement/>}/>
+        <Route path="/products" element={<Products/>}/> 
+        <Route path="/inventory-logs" element={<InventoryLogs/>}/>
+        <Route path="/categories" element={<Category/>}/> 
+        <Route path="/categories/add" element={<AddCategory/>}/>
       </Routes>
 
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="top-right" autoClose={2000}/>
     </Router>
   );
 }

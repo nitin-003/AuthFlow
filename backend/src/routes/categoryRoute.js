@@ -7,7 +7,6 @@ const upload = require("../middlewares/uploadMiddleware");
 
 const router = express.Router();
 
-router.get("/search", checkCategory);
 router.post("/", upload.single("image"), createCategory);
 router.get("/", getCategories);
 router.get("/image/:id", getCategoryImage);
