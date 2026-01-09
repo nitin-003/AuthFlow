@@ -72,8 +72,7 @@ function Category(){
 
       {/* Add Category Modal */}
       {openAddModal && (
-        <AddCategory
-          onClose={() => setOpenAddModal(false)}
+        <AddCategory onClose={() => setOpenAddModal(false)}
           onSuccess={() => {
             setOpenAddModal(false);
             fetchCategories();
@@ -85,5 +84,4 @@ function Category(){
 }
 
 export default Category;
-
 

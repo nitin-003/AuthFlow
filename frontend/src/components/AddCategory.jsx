@@ -71,7 +71,8 @@ export default function AddCategory({ onClose, onSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm px-4 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center 
+      bg-black/30 backdrop-blur-sm px-4 overflow-hidden">
       <div className="w-full max-w-md max-h-[90vh] bg-white rounded-2xl 
         shadow-2xl flex flex-col animate-[fadeIn_0.2s_ease-out]"
       >
@@ -93,7 +94,6 @@ export default function AddCategory({ onClose, onSuccess }) {
             <X size={18} />
           </button>
         </div>
-
 
         {/* Form */}
         <form onSubmit={handleSubmit}
@@ -180,5 +180,4 @@ export default function AddCategory({ onClose, onSuccess }) {
     </div>
   );
 }
-
 

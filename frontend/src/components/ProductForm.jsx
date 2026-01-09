@@ -102,9 +102,7 @@ export default function ProductForm({ fetchProducts, onClose }){
   const label = "text-xs font-bold text-gray-600";
 
   return (
-    <form onSubmit={handleSubmit}
-      className="flex flex-col w-full max-h-[90vh]"
-    >
+    <form onSubmit={handleSubmit} className="flex flex-col w-full max-h-[90vh]">
       {/* Header */}
       <div className="px-6 py-4 border-b">
         <h2 className="text-lg font-semibold">Add New Product</h2>
